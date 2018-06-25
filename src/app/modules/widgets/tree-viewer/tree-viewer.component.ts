@@ -36,8 +36,9 @@ export class TreeViewerComponent implements OnInit {
     }
   }
 
-  onIconClick(node: TreeNode) {
+  onIconClick(node: TreeNode, event?: MouseEvent) {
     if (this.config.onIconClick) {
+      event.stopPropagation();
       this.config.onIconClick(node);
     }
   }
