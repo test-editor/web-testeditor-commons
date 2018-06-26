@@ -94,7 +94,7 @@ describe('TreeViewerComponent', () => {
     fixture.detectChanges();
 
     // when
-    getRootTreeViewItemKey().triggerEventHandler('dblclick', null);
+    getRootTreeViewItemKey().triggerEventHandler('dblclick', new MouseEvent('dblclick'));
 
     // then
     expect(component.model.expanded).toBeDefined();
@@ -151,7 +151,7 @@ describe('TreeViewerComponent', () => {
     const icon = getRootTreeViewItemKey().query(By.css('.icon-type'));
 
     // when
-    icon.triggerEventHandler('click', null);
+    icon.triggerEventHandler('click', new MouseEvent('click'));
 
     // then
     expect(component.model.expanded).toBeDefined();
@@ -168,7 +168,7 @@ describe('TreeViewerComponent', () => {
     fixture.detectChanges();
 
     // when
-    getRootTreeViewItemKey().triggerEventHandler('click', null);
+    getRootTreeViewItemKey().triggerEventHandler('click', new MouseEvent('click'));
 
     // then
     expect(hasBeenClicked).toBeTruthy();
@@ -202,6 +202,49 @@ describe('TreeViewerComponent', () => {
 
     // then
     expect(getRootTreeViewItemKey().classes.selected).toBeTruthy();
+  });
+
+  it('only performs icon click action, not the general click action, when icon is clicked', () => {
+    // given
+    let iconClickHandlerTriggered = false;
+    let generalClickHandlerTriggered = false;
+
+    component.model = singleEmptyTreeNode();
+    component.config = {
+      onIconClick: (node) => iconClickHandlerTriggered = true,
+      onClick: (node) => generalClickHandlerTriggered = true
+    };
+    fixture.detectChanges();
+
+    const icon = fixture.debugElement.query(By.css('.icon-type')).nativeElement;
+
+    // when
+    icon.click();
+    fixture.detectChanges();
+
+    // then
+    expect(iconClickHandlerTriggered).toBeTruthy('Icon was clicked, but icon click handler was not triggered.');
+    expect(generalClickHandlerTriggered).toBeFalsy('Icon was clicked, but general click handler was triggered.');
+  });
+
+  it('performs the general click action when no icon click handler is specified and the icon is clicked', () => {
+    // given
+    let generalClickHandlerTriggered = false;
+
+    component.model = singleEmptyTreeNode();
+    component.config = {
+      onClick: (node) => generalClickHandlerTriggered = true
+    };
+    fixture.detectChanges();
+
+    const icon = fixture.debugElement.query(By.css('.icon-type')).nativeElement;
+
+    // when
+    icon.click();
+    fixture.detectChanges();
+
+    // then
+    expect(generalClickHandlerTriggered).toBeTruthy('the general click handler was not triggered.');
   });
 
 });
