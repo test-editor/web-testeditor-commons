@@ -1,11 +1,17 @@
 <div class="tree-view" *ngIf="model" [ngClass]="cssClasses">
   <div class="tree-view-item">
-    <div class="tree-view-item-key" (click)="onClick(model)" (dblclick)="onDoubleClick(model)" [style.padding-left]="level * 12 + 'px'"
+    <div #treeViewItemKey
+      class="tree-view-item-key"
+      (click)="onClick(model)"
+      (dblclick)="onDoubleClick(model)"
+      (keyup)="onKeyUp(model, $event)" tabindex="0"
+      [style.padding-left]="level * 12 + 'px'"
       [ngClass]="{
       'active': model.active,
       'header': level == 0,
       'selected': model.selected
-      }">
+      }"
+    >
       <div class="tree-view-element">
         <span class="icon-type fa" [ngClass]="icon" (click)="onIconClick(model, $event)">
         </span>

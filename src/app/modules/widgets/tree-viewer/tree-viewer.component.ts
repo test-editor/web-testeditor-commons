@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, isDevMode } from '@angular/core';
+import { Component, Input, OnInit, isDevMode, OnChanges, SimpleChanges, Renderer2, ElementRef, ViewChild } from '@angular/core';
 
 import { MessagingService } from '@testeditor/messaging-service';
 
@@ -37,6 +37,12 @@ export class TreeViewerComponent implements OnInit {
   ngOnInit() {
     if (this.model && this.config && this.config.embeddedButton) {
       this.embeddedButton = this.config.embeddedButton(this.model);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.model.selected) {
+      this.treeViewItemKey.nativeElement.focus();
     }
   }
 
@@ -134,6 +140,13 @@ export class TreeViewerComponent implements OnInit {
       this.config.onTextDoubleClick(node);
     }
     this.select(node);
+  }
+
+  onKeyUp(node: TreeNode, event: KeyboardEvent) {
+    console.log('key up!')
+    if (this.config.onKeyPress) {
+      this.config.onKeyPress.get(event.key)(node);
+    }
   }
 
   commenceAction(action: ConfirmationNeedingAction) {
