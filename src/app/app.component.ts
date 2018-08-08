@@ -4,7 +4,7 @@ import { InputBoxConfig, TreeViewerInputBoxConfig,
   TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED } from './modules/event-types-in';
 import { TREE_NODE_SELECTED } from './modules/event-types-out';
 import { DeleteAction } from './modules/widgets/tree-viewer/confirmation-needing-action';
-import { forEach, TreeNode } from './modules/widgets/tree-viewer/tree-node';
+import { forEach, TreeNode, CommonTreeNodeActions } from './modules/widgets/tree-viewer/tree-node';
 import { TreeViewerConfig } from './modules/widgets/tree-viewer/tree-viewer-config';
 import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-embedded-button';
 
@@ -16,7 +16,7 @@ import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-
 export class AppComponent {
   title = 'app';
 
-  model: TreeNode = {
+  model = new TreeNode({
     name: 'parent node',
     root: null,
     collapsedCssClasses: 'fa-chevron-right',
@@ -29,7 +29,7 @@ export class AppComponent {
       { name: 'child node 2', children: [], root: null, leafCssClasses: 'fa-file' },
       { name: 'child node 3', children: [], root: null, leafCssClasses: 'fa-file' }
     ]
-  };
+  });
 
   selectedNode: TreeNode = null;
   indicatorFieldState = [0, 0];
@@ -38,6 +38,7 @@ export class AppComponent {
     onDoubleClick: (node: TreeNode) => node.cssClasses = 'hidden',
     onIconClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
     onClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
+    onKeyPress: CommonTreeNodeActions.arrowKeyNavigation,
     embeddedButton: (node: TreeNode) => new EmbeddedDeleteButton(
       new DeleteAction(node, (_node) => console.log(`Clicked delete button of node '${_node.name}'`))),
     indicatorFields: [

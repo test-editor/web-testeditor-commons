@@ -1,5 +1,4 @@
-import { Component, Input, OnInit, isDevMode } from '@angular/core';
-
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Renderer2, ElementRef, ViewChild, isDevMode } from '@angular/core';
 import { MessagingService } from '@testeditor/messaging-service';
 
 import { ConfirmationNeedingAction, isConfirmationNeedingAction } from './confirmation-needing-action';
@@ -15,7 +14,8 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './tree-viewer.component.html',
   styleUrls: ['./tree-viewer.component.css']
 })
-export class TreeViewerComponent implements OnInit {
+export class TreeViewerComponent implements OnInit, OnChanges {
+  @ViewChild('treeViewItemKey') treeViewItemKey: ElementRef;
 
   @Input() model: TreeNode;
   @Input() level = 0;
@@ -37,6 +37,12 @@ export class TreeViewerComponent implements OnInit {
   ngOnInit() {
     if (this.model && this.config && this.config.embeddedButton) {
       this.embeddedButton = this.config.embeddedButton(this.model);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.model.selected) {
+      this.treeViewItemKey.nativeElement.focus();
     }
   }
 
@@ -119,6 +125,13 @@ export class TreeViewerComponent implements OnInit {
       this.config.onDoubleClick(node);
     }
     this.select(node);
+  }
+
+  onKeyUp(node: TreeNode, event: KeyboardEvent) {
+    console.log('key up!')
+    if (this.config.onKeyPress) {
+      this.config.onKeyPress.get(event.key)(node);
+    }
   }
 
   onTextClick(node: TreeNode, event?: MouseEvent) {
