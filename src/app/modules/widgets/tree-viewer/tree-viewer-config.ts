@@ -1,7 +1,9 @@
-import { TreeNode } from './tree-node';
+import { TreeNode, TreeNodeAction } from './tree-node';
 
+export type KeyActionMap = Map<string, TreeNodeAction>;
 export interface TreeViewerConfig {
-  onClick?: (node: TreeNode) => void;
-  onDoubleClick?: (node: TreeNode) => void;
-  onIconClick?: (node: TreeNode) => void;
+  onClick?: TreeNodeAction;
+  onDoubleClick?: TreeNodeAction;
+  onIconClick?: TreeNodeAction;
+  onKeyPress?: KeyActionMap;
 }

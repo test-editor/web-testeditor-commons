@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Renderer2, ElementRef, ViewChild } from '@angular/core';
 import { TreeNode } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
 
@@ -7,15 +7,22 @@ import { TreeViewerConfig } from './tree-viewer-config';
   templateUrl: './tree-viewer.component.html',
   styleUrls: ['./tree-viewer.component.css']
 })
-export class TreeViewerComponent implements OnInit {
+export class TreeViewerComponent implements OnInit, OnChanges {
+  @ViewChild('treeViewItemKey') treeViewItemKey: ElementRef;
 
   @Input() model: TreeNode;
   @Input() level = 0;
   @Input() config: TreeViewerConfig;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.model.selected) {
+      this.treeViewItemKey.nativeElement.focus();
+    }
   }
 
   get icon(): string {
@@ -46,6 +53,13 @@ export class TreeViewerComponent implements OnInit {
   onDoubleClick(node: TreeNode) {
     if (this.config.onDoubleClick) {
       this.config.onDoubleClick(node);
+    }
+  }
+
+  onKeyUp(node: TreeNode, event: KeyboardEvent) {
+    console.log('key up!')
+    if (this.config.onKeyPress) {
+      this.config.onKeyPress.get(event.key)(node);
     }
   }
 

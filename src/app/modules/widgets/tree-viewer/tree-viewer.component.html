@@ -1,9 +1,10 @@
 <div class="tree-view" *ngIf="model">
   <div class="tree-view-item">
-    <div
+    <div #treeViewItemKey
       class="tree-view-item-key"
       (click)="onClick(model)"
       (dblclick)="onDoubleClick(model)"
+      (keyup)="onKeyUp(model, $event)" tabindex="0"
       [style.padding-left]="level * 12 + 'px'"
       [ngClass]="{
       'active': model.active,
