@@ -38,6 +38,7 @@ export class AppComponent {
     onDoubleClick: (node: TreeNode) => node.cssClasses = 'hidden',
     onIconClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
     onClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
+    onKeyPress: CommonTreeNodeActions.arrowKeyNavigation,
     embeddedButton: (node: TreeNode) => new EmbeddedDeleteButton(
       new DeleteAction(node, (_node) => console.log(`Clicked delete button of node '${_node.name}'`))),
     indicatorFields: [
