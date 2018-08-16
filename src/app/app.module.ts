@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
+import { TreeViewerModule } from './modules/widgets/tree-viewer/tree-viewer.module';
 
 
 @NgModule({
@@ -10,7 +11,7 @@ import { AppComponent } from './app.component';
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule, TreeViewerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
