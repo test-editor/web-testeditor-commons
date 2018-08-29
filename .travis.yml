@@ -6,9 +6,17 @@ node_js:
 os:
 - linux
 cache: yarn
+
 env:
-- FIREFOX_VERSION="latest"
-- FIREFOX_VERSION="59.0.2"
+  global: 
+    - # Environment variables for NPM version patch    
+    - secure: "CMw+ysios212nV+kCQB2oClJx+m/SHSI+qPrMcRkeZ8LYeBoWhtPN1UQvTnN/vLHX/mpa4hUqd3Q9lMWdpBZDlMvGX0CZ8waVNyKx1iGBHiY2YViICx+aXAAQ8+Zxmfn/lzKhqH7QJu14UDXSOUkoPKL4UfXHYAQsen/svC9BYTTQEopmF60DAAjlLY/6Vb+rn6DhcxC/GWlkQyr8P4JFLsJKyg/Kc78vki+ficvuJ6Y1PmlqGkV/uYCVAlUVdS+pgznyNvYijjAA3Zy8OxnzrZ1kOoK4eW4j5k39dVXXZWqiF/q21ReoaNhby0tRFpdDU0aQqrBR1pZSfIMA6kl+y285k37id1fyHGvjbsfQDvEvpYFwIr/w2mmHBgauzbQ8VJ9ZWDElh4+NbrfR5znm0pyzzeH8HPdLSwb95dh+AlsUX2ef7V8V/7gd8bIkoFFnJ473Z+Tju15woVvSueaghVeQE8/cVRUvV67zvd691z+ulV15WdXktZGNMR5CJTRZ/s0LoZOYjyyKphIHiMXfNaWJmUI/Nf67O/vERowxIifobvFl23PO1UWqwP76gtrfTwcPL29SMStiuIQNZHT0X5AyCOLfaAEoNYnmSsO2aqkWlB7vGsi6lRX2F+egAxcyLTTaVmFI8X43+v576epg0JAo3lL/wYSDisSMu+FHsE="
+    - secure: "HxppQ6nqVXhXiSnuDRIyA0R9H1uDIbxeAhhl2FIH1mn4/VEmBuzWZdR4XUrO4lh9LJPrUR5xZu5yxKJS/Plfd6BIvsa+yKQpUJTJjLx4dk3vVHRcRvgpJGijEby/N/Rogtxa0fEuIx7L4dGEwxR7HZ5s2nwu9DKDFXHjPTq9cxYo2GsA4jMl/rd7tBkIfETxb1t0N0B9iaW5+FJ3qZTkchgfAcpdeaSCH5kD2eZ5v0qsr3E+qH8xVjcObzaeQjrbwN3hCIAJT7qLE4TkwPD0gdvj0cYrwv9hGrliQ5HURP2P7gpqpZLQTragaM17L0Lz3caxIjeQPbECKOqhefUpumhp0l8r3lW5ig3nsoq0S5OO1sjqIRdjncsg6RrOPNkfBPmm/xtTmIN9hoXP5L8mmNs/k1o1AG5sX4JAL4TcM7k4iypWdPeVFv+tQUhSKnSBQ2ObpfdXaSlhRgOg7pe4iZdqtKU3WE7xmtLMxdoBi42RPUy5CESYbKgU5ILy102Q6bEgOYVjy8ZvO/02MHYsL3nzCCX3LlrSBC1EMOsIsepLnODCOWK9AScI7GTEHtx28qfXq/15lNSziBxDKHwZKxnqs5u3rXgyJRGju/iGAp/GJMgSfXaqb6IKP05mTjuNXLForG0JAbOvneiOGSA3MFBLbAF0w8p/P5PAV/fha6A=" 
+
+  matrix:
+    - FIREFOX_VERSION="latest"
+    - FIREFOX_VERSION="61.0.2"
+
 before_install:
 - echo $FIREFOX_VERSION
 - export FIREFOX_SOURCE_URL='https://download.mozilla.org/?product=firefox-'$FIREFOX_VERSION'&lang=en-US&os=linux64'
