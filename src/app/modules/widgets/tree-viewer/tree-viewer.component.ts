@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ConfirmationNeedingAction } from './confirmation-needing-action';
 import { TreeNode } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
 
@@ -12,6 +13,9 @@ export class TreeViewerComponent implements OnInit {
   @Input() model: TreeNode;
   @Input() level = 0;
   @Input() config: TreeViewerConfig;
+
+  private activeAction: ConfirmationNeedingAction = null;
+  private get actionCssClasses(): string { return this.activeAction ? this.activeAction.messageCssClassses : ''; }
 
   constructor() { }
 
@@ -51,6 +55,19 @@ export class TreeViewerComponent implements OnInit {
     if (this.config.onDoubleClick) {
       this.config.onDoubleClick(node);
     }
+  }
+
+  commenceAction(action: ConfirmationNeedingAction) {
+    this.activeAction = action;
+  }
+
+  onActionCancelled() {
+    this.activeAction = null;
+  }
+
+  onActionConfirmed() {
+    this.activeAction.onConfirm();
+    this.activeAction = null;
   }
 
 }
