@@ -7,6 +7,7 @@ export interface TreeNode {
   expandedCssClasses?: string;
   collapsedCssClasses?: string;
   leafCssClasses?: string;
+  cssClasses?: string;
   hover?: string;
   id?: string;
 }
