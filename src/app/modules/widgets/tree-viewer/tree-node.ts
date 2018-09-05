@@ -112,7 +112,10 @@ export class CommonTreeNodeActions {
     const nextNode = node.nextVisible();
     nextNode.selectOnly();
   }
-  public static readonly selectPreviousVisible = (node: TreeNode) => { node.selected = false; node.previousVisible().selected = true; };
+  public static readonly selectPreviousVisible = (node: TreeNode) => {
+    const previousNode = node.previousVisible()
+    previousNode.selectOnly();
+  }
 
   // field must come after functions because it references them
   // tslint:disable-next-line:member-ordering
