@@ -18,6 +18,10 @@ export class TreeViewerComponent implements OnInit {
   ngOnInit() {
   }
 
+  get cssClasses(): string {
+    return this.model.cssClasses ? this.model.cssClasses : '';
+  }
+
   get icon(): string {
     if (this.model) {
       switch (this.model.expanded) {

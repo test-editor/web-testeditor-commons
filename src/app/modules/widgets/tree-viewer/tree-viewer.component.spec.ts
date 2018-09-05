@@ -13,7 +13,8 @@ describe('TreeViewerComponent', () => {
   const singleEmptyTreeNode: () => TreeNode = () => ({
     name: 'tree node',
     children: [],
-    leafCssClasses: 'fa-file'
+    leafCssClasses: 'fa-file',
+    cssClasses: 'someCssClass otherCssClass'
   });
 
   const treeNodeWithSubNodes: () => TreeNode = () => ({
@@ -245,6 +246,37 @@ describe('TreeViewerComponent', () => {
 
     // then
     expect(generalClickHandlerTriggered).toBeTruthy('the general click handler was not triggered.');
+  });
+
+  it('uses model`s css classes for node', () => {
+    // given
+    const treeNode = singleEmptyTreeNode();
+    component.model = treeNode;
+
+    // when
+    fixture.detectChanges();
+
+    // then
+    const treeView = fixture.debugElement.query(By.css('.tree-view'));
+    expect(treeView.classes['someCssClass']).toBeTruthy();
+    expect(treeView.classes['otherCssClass']).toBeTruthy();
+  });
+
+  it('uses applies css classes when the model changes', () => {
+    // given
+    const treeNode = singleEmptyTreeNode();
+    component.model = treeNode;
+    fixture.detectChanges();
+
+    // when
+    component.model.cssClasses = 'newCssClass';
+    fixture.detectChanges();
+
+    // then
+    const treeView = fixture.debugElement.query(By.css('.tree-view'));
+    expect(treeView.classes['someCssClass']).toBeFalsy();
+    expect(treeView.classes['otherCssClass']).toBeFalsy();
+    expect(treeView.classes['newCssClass']).toBeTruthy();
   });
 
 });
