@@ -27,6 +27,6 @@ export class AppComponent {
   treeConfig: TreeViewerConfig = {
     onDoubleClick: (node: TreeNode) => node.expanded = !node.expanded,
     onIconClick: (node: TreeNode) => node.expanded = !node.expanded,
-    onClick: () => {}
+    onClick: (node: TreeNode) => node.cssClasses = 'hidden'
   };
 }
