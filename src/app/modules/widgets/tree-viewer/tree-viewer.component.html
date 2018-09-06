@@ -17,6 +17,12 @@
         <span title="{{model.hover}}">{{model.name}}</span>
       </div>
     </div>
+    <div *ngIf="activeAction" class="confirm-action" [ngClass]="actionCssClasses">
+      <span class="confirm-action-message">{{activeAction.message}}</span>
+      <br/>
+      <a href="#" class="confirm-action-cancel-button" [ngClass]="activeAction.cancelCssClasses" (click)="onActionCancelled()">{{activeAction.cancelButtonText}}</a>
+      <a href="#" class="confirm-action-confirm-button" [ngClass]="activeAction.confirmCssClasses" (click)="onActionConfirmed()">{{activeAction.confirmButtonText}}</a>
+    </div>
   </div>
   <div *ngIf="model.expanded">
     <div *ngFor="let child of model.children">

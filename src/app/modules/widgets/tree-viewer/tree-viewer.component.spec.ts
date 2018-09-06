@@ -5,6 +5,7 @@ import { TreeNode } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { DeleteAction } from './confirmation-needing-action';
 
 describe('TreeViewerComponent', () => {
   let component: TreeViewerComponent;
@@ -277,6 +278,69 @@ describe('TreeViewerComponent', () => {
     expect(treeView.classes['someCssClass']).toBeFalsy();
     expect(treeView.classes['otherCssClass']).toBeFalsy();
     expect(treeView.classes['newCssClass']).toBeTruthy();
+  });
+
+  it('opens up confirmation dialog when calling commenceAction', () => {
+    // given
+    const treeNode = singleEmptyTreeNode();
+    component.model = treeNode;
+    const action = new DeleteAction('elementName', () => {});
+
+    // when
+    component.commenceAction(action);
+    fixture.detectChanges();
+
+    // then
+    const confirmationDialog = fixture.debugElement.query(By.css('.confirm-action'));
+    const message = fixture.debugElement.query(By.css('.confirm-action-message'));
+    const cancelButton = fixture.debugElement.query(By.css('.confirm-action-cancel-button'));
+    const confirmButton = fixture.debugElement.query(By.css('.confirm-action-confirm-button'));
+    expect(confirmationDialog).toBeTruthy();
+    expect(confirmationDialog.classes['alert']).toBeTruthy();
+    expect(confirmationDialog.classes['alert-warning']).toBeTruthy();
+    expect(cancelButton.classes['alert-link']).toBeTruthy();
+    expect(confirmButton.classes['alert-link']).toBeTruthy();
+    expect(message.nativeElement.innerText.trim()).toEqual('Are you sure you want to delete \'elementName\'?');
+  });
+
+  it('closes the confirmation dialog when user clicks the cancel button', () => {
+    // given
+    const treeNode = singleEmptyTreeNode();
+    let actionHasBeenCalled = false;
+    component.model = treeNode;
+    const action = new DeleteAction('elementName', () => actionHasBeenCalled = true);
+    component.commenceAction(action);
+    fixture.detectChanges();
+    const cancelButton = fixture.debugElement.query(By.css('.confirm-action-cancel-button'));
+
+    // when
+    cancelButton.nativeElement.click();
+    fixture.detectChanges();
+
+    // then
+    const confirmationDialog = fixture.debugElement.query(By.css('.confirm-action'));
+    expect(confirmationDialog).toBeFalsy();
+    expect(actionHasBeenCalled).toBeFalsy();
+  });
+
+  it('executes the associated action and closes the confirmation dialog when user clicks the confirm button', () => {
+    // given
+    const treeNode = singleEmptyTreeNode();
+    let actionHasBeenCalled = false;
+    component.model = treeNode;
+    const action = new DeleteAction('elementName', () => actionHasBeenCalled = true);
+    component.commenceAction(action);
+    fixture.detectChanges();
+    const confirmButton = fixture.debugElement.query(By.css('.confirm-action-confirm-button'));
+
+    // when
+    confirmButton.nativeElement.click();
+    fixture.detectChanges();
+
+    // then
+    const confirmationDialog = fixture.debugElement.query(By.css('.confirm-action'));
+    expect(confirmationDialog).toBeFalsy();
+    expect(actionHasBeenCalled).toBeTruthy();
   });
 
 });
