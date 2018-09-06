@@ -16,6 +16,9 @@ export class TreeViewerComponent implements OnInit {
 
   private activeAction: ConfirmationNeedingAction = null;
   private get actionCssClasses(): string { return this.activeAction ? this.activeAction.messageCssClassses : ''; }
+  private get embeddedButtonClasses(): string {
+    return this.config && this.config.embeddedButton && this.config.embeddedButton.cssClasses ? this.config.embeddedButton.cssClasses : '';
+  }
 
   constructor() { }
 
@@ -68,6 +71,16 @@ export class TreeViewerComponent implements OnInit {
   onActionConfirmed() {
     this.activeAction.onConfirm();
     this.activeAction = null;
+  }
+
+  showEmbeddedButton(): boolean {
+    return this.config && this.config.embeddedButton && this.config.embeddedButton.visible(this.model, this.level);
+  }
+
+  onEmbeddedButtonClick() {
+    if (this.config.embeddedButton) {
+      this.config.embeddedButton.onClick(this.model);
+    }
   }
 
 }

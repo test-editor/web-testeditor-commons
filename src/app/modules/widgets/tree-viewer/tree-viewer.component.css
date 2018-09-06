@@ -60,3 +60,13 @@
 .confirm-action {
   margin-left: 40px;
 }
+
+.embedded-button {
+  font-size: 12px;
+  right: 5px;
+  visibility: hidden;
+}
+
+.tree-view-item:hover .embedded-button {
+  visibility: visible;
+}

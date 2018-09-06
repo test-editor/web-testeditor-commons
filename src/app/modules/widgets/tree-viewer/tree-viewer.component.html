@@ -16,6 +16,14 @@
         </span>
         <span title="{{model.hover}}">{{model.name}}</span>
       </div>
+
+      <div>
+        <span *ngIf="showEmbeddedButton()"
+          [title]="config.embeddedButton.hoverText(model)"
+          class="embedded-button" [ngClass]="embeddedButtonClasses"
+          (click)="onEmbeddedButtonClick()"></span>
+      </div>
+
     </div>
     <div *ngIf="activeAction" class="confirm-action" [ngClass]="actionCssClasses">
       <span class="confirm-action-message">{{activeAction.message}}</span>
