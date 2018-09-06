@@ -70,3 +70,7 @@
 .tree-view-item:hover .embedded-button {
   visibility: visible;
 }
+
+.hidden {
+  display: none;
+}
