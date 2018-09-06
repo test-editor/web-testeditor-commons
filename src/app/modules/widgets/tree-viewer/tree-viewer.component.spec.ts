@@ -2,10 +2,10 @@ import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core
 
 import { TreeViewerComponent } from './tree-viewer.component';
 import { TreeNode } from './tree-node';
-import { TreeViewerConfig } from './tree-viewer-config';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { DeleteAction } from './confirmation-needing-action';
+import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
 
 describe('TreeViewerComponent', () => {
   let component: TreeViewerComponent;
@@ -341,6 +341,48 @@ describe('TreeViewerComponent', () => {
     const confirmationDialog = fixture.debugElement.query(By.css('.confirm-action'));
     expect(confirmationDialog).toBeFalsy();
     expect(actionHasBeenCalled).toBeTruthy();
+  });
+
+  it('displays an embedded delete button for all nodes but the root, if specified in the config', () => {
+    // given
+    const treeNode = treeNodeWithSubNodes();
+    treeNode.expanded = true;
+    component.model = treeNode;
+
+    // when
+    component.config = { embeddedButton: new EmbeddedDeleteButton(() => {}) };
+    fixture.detectChanges();
+
+    // then
+    const treeview = fixture.debugElement.query(By.css('.tree-view'));
+    const embeddedButtons = treeview.queryAll(By.css('.tree-view-item-key .embedded-button'));
+    expect(embeddedButtons.length).toEqual(3);
+    embeddedButtons.forEach((embeddedButton, index) => {
+      expect(embeddedButton.classes['embedded-delete-button']).toBeTruthy();
+      expect(embeddedButton.classes['fa']).toBeTruthy();
+      expect(embeddedButton.classes['fa-fw']).toBeTruthy();
+      expect(embeddedButton.classes['fa-times']).toBeTruthy();
+      expect(embeddedButton.classes['fa-times']).toBeTruthy();
+      expect(embeddedButton.properties['title']).toEqual(`delete 'child node ${index + 1}'`);
+    });
+  });
+
+  it('performs the provided action when the embedded delete button is clicked', () => {
+    // given
+    const treeNode = treeNodeWithSubNodes();
+    treeNode.expanded = true;
+    component.model = treeNode;
+    let actionPerformed = false;
+    component.config = { embeddedButton: new EmbeddedDeleteButton(() => actionPerformed = true) };
+    fixture.detectChanges();
+    const embeddedButton = fixture.debugElement.query(By.css('.tree-view-item-key .embedded-button'));
+
+    // when
+    embeddedButton.nativeElement.click();
+    fixture.detectChanges();
+
+    // then
+    expect(actionPerformed).toBeTruthy();
   });
 
 });
