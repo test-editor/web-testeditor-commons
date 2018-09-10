@@ -1,6 +1,6 @@
 {
   "name": "@testeditor/testeditor-commons",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "Angular library containing generic components used throughout the Test-Editor.",
   "license": "EPL",
   "keywords": [
