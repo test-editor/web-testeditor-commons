@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TreeNode } from './modules/widgets/tree-viewer/tree-node';
+import { TreeNode, forEach } from './modules/widgets/tree-viewer/tree-node';
 import { TreeViewerConfig } from './modules/widgets/tree-viewer/tree-viewer-config';
 import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-embedded-button';
 
@@ -13,15 +13,16 @@ export class AppComponent {
 
   model: TreeNode = {
     name: 'parent node',
+    root: null,
     collapsedCssClasses: 'fa-chevron-right',
     expandedCssClasses: 'fa-chevron-down',
     leafCssClasses: 'fa-folder',
     cssClasses: '',
     expanded: false,
     children: [
-      { name: 'child node 1', children: [] },
-      { name: 'child node 2', children: [] },
-      { name: 'child node 3', children: [] }
+      { name: 'child node 1', children: [], root: null },
+      { name: 'child node 2', children: [], root: null },
+      { name: 'child node 3', children: [], root: null }
     ]
   };
 
@@ -31,4 +32,9 @@ export class AppComponent {
     onClick: (node: TreeNode) => node.expanded = !node.expanded,
     embeddedButton: new EmbeddedDeleteButton((node) => console.log(`Delete button of node '${node.name}' was clicked!`))
   };
+
+  constructor() {
+    forEach(this.model, node => { node.root = this.model; });
+  }
+
 }

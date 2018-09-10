@@ -1,38 +1,50 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { TreeViewerComponent } from './tree-viewer.component';
-import { TreeNode } from './tree-node';
+import { TreeNode, forEach } from './tree-node';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { DeleteAction } from './confirmation-needing-action';
 import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
+import { MessagingModule } from '@testeditor/messaging-service';
 
 describe('TreeViewerComponent', () => {
   let component: TreeViewerComponent;
   let fixture: ComponentFixture<TreeViewerComponent>;
 
-  const singleEmptyTreeNode: () => TreeNode = () => ({
-    name: 'tree node',
-    children: [],
-    leafCssClasses: 'fa-file',
-    cssClasses: 'someCssClass otherCssClass'
-  });
+  const singleEmptyTreeNode: () => TreeNode = () => {
+    const node = {
+      name: 'tree node',
+      children: [],
+      root: null,
+      leafCssClasses: 'fa-file',
+      cssClasses: 'someCssClass otherCssClass'
+    };
+    node.root = node;
+    return node;
+  };
 
-  const treeNodeWithSubNodes: () => TreeNode = () => ({
-    name: 'parent node',
-    collapsedCssClasses: 'fa-chevron-right',
-    expandedCssClasses: 'fa-chevron-down',
-    leafCssClasses: 'fa-folder',
-    expanded: false,
-    children: [
-      { name: 'child node 1', children: [] },
-      { name: 'child node 2', children: [] },
-      { name: 'child node 3', children: [] }
-    ]
-  });
+  const treeNodeWithSubNodes: () => TreeNode = () => {
+    const root: TreeNode = {
+      name: 'parent node',
+      root: null,
+      collapsedCssClasses: 'fa-chevron-right',
+      expandedCssClasses: 'fa-chevron-down',
+      leafCssClasses: 'fa-folder',
+      expanded: false,
+      children: [
+        { name: 'child node 1', children: [], root: null },
+        { name: 'child node 2', children: [], root: null },
+        { name: 'child node 3', children: [], root: null }
+      ]
+    };
+    forEach(root, node => { node.root = root; });
+    return root;
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ MessagingModule.forRoot() ],
       declarations: [ TreeViewerComponent ]
     })
     .compileComponents();
@@ -383,6 +395,64 @@ describe('TreeViewerComponent', () => {
 
     // then
     expect(actionPerformed).toBeTruthy();
+  });
+
+  it('marks a node as selected if clicking it', () => {
+    // given
+    component.model = treeNodeWithSubNodes();
+    fixture.detectChanges();
+
+    const item = fixture.debugElement.query(By.css('.tree-view-item-key')).nativeElement;
+
+    // when
+    item.click();
+
+    // then
+    expect(component.model.selected).toBeTruthy();
+  });
+
+  it('deselects selected node upon selection of different node', () => {
+    const treeNode = treeNodeWithSubNodes();
+    const subNode = treeNode.children[0];
+    component.model = treeNode;
+    component.select(treeNode);
+
+    // when
+    component.select(subNode);
+
+    // then
+    expect(treeNode.selected).toBeFalsy();
+    expect(subNode.selected).toBeTruthy();
+  });
+
+  it('does not change selection if selecting the same node again', () => {
+    const treeNode = treeNodeWithSubNodes();
+    component.model = treeNode;
+    component.select(treeNode);
+
+    // when
+    component.select(treeNode);
+
+    // then
+    expect(treeNode.selected).toBeTruthy();
+  });
+
+  it('does not change selection if selecting a node of a different tree', () => {
+    const treeNode = treeNodeWithSubNodes();
+    component.model = treeNode;
+    component.select(treeNode);
+    const unrelatedNode: TreeNode = {
+      name: 'unrelated node',
+      children: [],
+      root: null
+    };
+    unrelatedNode.root = unrelatedNode;
+
+    // when
+    component.select(unrelatedNode);
+
+    // then
+    expect(treeNode.selected).toBeTruthy();
   });
 
 });

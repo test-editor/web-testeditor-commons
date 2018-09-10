@@ -11,6 +11,7 @@ describe('EmbeddedDeleteButton', () => {
     const buttonAction = () => {};
     const contextNode: TreeNode = {
       children: [],
+      root: null,
       name: 'NodeWithDeleteButton'
     };
 
