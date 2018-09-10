@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { MessagingModule } from '@testeditor/messaging-service';
 
 import { AppComponent } from './app.component';
 import { TreeViewerModule } from './modules/widgets/tree-viewer/tree-viewer.module';
@@ -11,7 +12,9 @@ import { TreeViewerModule } from './modules/widgets/tree-viewer/tree-viewer.modu
     AppComponent
   ],
   imports: [
-    BrowserModule, TreeViewerModule
+    BrowserModule,
+    TreeViewerModule,
+    MessagingModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

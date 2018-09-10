@@ -1,7 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
+
+import { MessagingService } from '@testeditor/messaging-service';
+
 import { ConfirmationNeedingAction } from './confirmation-needing-action';
 import { TreeNode } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
+import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
 
 @Component({
   selector: 'app-tree-viewer',
@@ -20,7 +24,7 @@ export class TreeViewerComponent implements OnInit {
     return this.config && this.config.embeddedButton && this.config.embeddedButton.cssClasses ? this.config.embeddedButton.cssClasses : '';
   }
 
-  constructor() { }
+  constructor(private messagingService: MessagingService) { }
 
   ngOnInit() {
   }
@@ -41,23 +45,58 @@ export class TreeViewerComponent implements OnInit {
     }
   }
 
+  /** select this node, publish event that this node has been selected,
+      register for selection events (react to selections of other nodes of the same tree and deselect) */
+  public select(node: TreeNode): void {
+    if (!node.selected && node.root === this.model) {
+      node.selected = true;
+      const subscription = this.messagingService.subscribe(TREE_NODE_SELECTED, (selectedNode) => {
+        if ((selectedNode !== node) && (selectedNode.root === this.model.root)) {
+          node.selected = false;
+          subscription.unsubscribe();
+          this.messagingService.publish(TREE_NODE_DESELECTED, node);
+        }
+      });
+
+      this.messagingService.publish(TREE_NODE_SELECTED, node);
+    }
+  }
+
   onClick(node: TreeNode) {
-    if (this.config.onClick) {
+    if (this.config && this.config.onClick) {
       this.config.onClick(node);
     }
+    this.select(node);
   }
 
   onIconClick(node: TreeNode, event?: MouseEvent) {
-    if (this.config.onIconClick) {
+    if (this.config && this.config.onIconClick) {
       event.stopPropagation();
       this.config.onIconClick(node);
     }
+    this.select(node);
   }
 
   onDoubleClick(node: TreeNode) {
-    if (this.config.onDoubleClick) {
+    if (this.config && this.config.onDoubleClick) {
       this.config.onDoubleClick(node);
     }
+    this.select(node);
+  }
+
+  onTextClick(node: TreeNode, event?: MouseEvent) {
+    if (this.config && this.config.onTextClick) {
+      event.stopPropagation();
+      this.config.onTextClick(node);
+    }
+    this.select(node);
+  }
+
+  onTextDoubleClick(node: TreeNode) {
+    if (this.config && this.config.onTextDoubleClick) {
+      this.config.onTextDoubleClick(node);
+    }
+    this.select(node);
   }
 
   commenceAction(action: ConfirmationNeedingAction) {

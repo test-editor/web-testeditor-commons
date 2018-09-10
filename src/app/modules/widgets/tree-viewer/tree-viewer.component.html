@@ -14,7 +14,7 @@
       <div class="tree-view-element">
         <span class="icon-type fa" [ngClass]="icon" (click)="onIconClick(model, $event)">
         </span>
-        <span title="{{model.hover}}">{{model.name}}</span>
+        <span title="{{model.hover}}" (click)="onTextClick(model, $event)" (dblclick)="onTextDoubleClick(model, $event)">{{model.name}}</span>
       </div>
 
       <div>
