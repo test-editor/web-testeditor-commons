@@ -3,6 +3,7 @@ import { TreeNode, forEach } from './modules/widgets/tree-viewer/tree-node';
 import { TreeViewerConfig } from './modules/widgets/tree-viewer/tree-viewer-config';
 import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-embedded-button';
 import { DeleteAction } from './modules/widgets/tree-viewer/confirmation-needing-action';
+import { ContextType } from './modules/widgets/tree-viewer/new-element/new-element.component';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,7 @@ export class AppComponent {
     expanded: false,
     children: [
       { name: 'child node 1', children: [], root: null },
-      { name: 'child node 2', children: [], root: null },
+      { name: 'child node 2', children: [], root: null, createInContextRequest: true },
       { name: 'child node 3', children: [], root: null }
     ]
   };
@@ -32,7 +33,12 @@ export class AppComponent {
     onIconClick: (node: TreeNode) => node.expanded = !node.expanded,
     onClick: (node: TreeNode) => node.expanded = !node.expanded,
     embeddedButton: (node: TreeNode) => new EmbeddedDeleteButton(
-      new DeleteAction(node, (_node) => console.log(`Clicked delete button of node '${_node.name}'`)))
+      new DeleteAction(node, (_node) => console.log(`Clicked delete button of node '${_node.name}'`))),
+    createNewElement: (context, name) => {console.log(
+      `Create element with name '${name}' as a ${context.type === ContextType.Parent ? 'child' : 'sibling'} of '${context.node.name}'`);
+      return true;
+    },
+    validateName: (name) => 'Ni!' === name ? { valid: false, message: 'You must not say Ni!'} : { valid: true }
   };
 
   constructor() {
