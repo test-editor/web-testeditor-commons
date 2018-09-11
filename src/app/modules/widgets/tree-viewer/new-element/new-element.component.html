@@ -1,0 +1,13 @@
+<div class="navNewElement" [style.padding-left]="config.indent">
+  <span class="icon-type fa" [ngClass]="config.iconCssClasses"></span>
+  <input #theInput
+    (keyup)="onKeyup($event)"
+    (keyup.enter)="onEnter()"
+    (keyup.escape)="onCancel()"
+    (blur)="onCancel()"
+    [ngClass]="{
+      'input-error': errorMessage
+    }"
+  />
+  <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
+</div>
