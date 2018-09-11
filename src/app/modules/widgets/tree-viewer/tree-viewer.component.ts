@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, isDevMode } from '@angular/core';
 
 import { MessagingService } from '@testeditor/messaging-service';
 
@@ -53,9 +53,12 @@ export class TreeViewerComponent implements OnInit {
   /** select this node, publish event that this node has been selected,
       register for selection events (react to selections of other nodes of the same tree and deselect) */
   public select(node: TreeNode): void {
-    if (!node.selected && node.root === this.model) {
+    this.log('selecting node', node);
+    this.log('model is', this.model);
+    if (!node.selected && node.root === this.model.root) {
       node.selected = true;
       const subscription = this.messagingService.subscribe(TREE_NODE_SELECTED, (selectedNode) => {
+        this.log('received TREE_NODE_SELECTED', selectedNode);
         if ((selectedNode !== node) && (selectedNode.root === this.model.root)) {
           node.selected = false;
           subscription.unsubscribe();
@@ -64,6 +67,7 @@ export class TreeViewerComponent implements OnInit {
       });
 
       this.messagingService.publish(TREE_NODE_SELECTED, node);
+      this.log('published TREE_NODE_SELECTED', node);
     }
   }
 
@@ -127,6 +131,15 @@ export class TreeViewerComponent implements OnInit {
         this.commenceAction(this.embeddedButton.onClick);
       } else {
         this.embeddedButton.onClick(this.model);
+      }
+    }
+  }
+
+  private log(msg: String, payload?) {
+    if (isDevMode()) {
+      console.log('TreeViewerComponent: ' + msg);
+      if (payload !== undefined) {
+        console.log(payload);
       }
     }
   }
