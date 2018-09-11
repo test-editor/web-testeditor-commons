@@ -28,7 +28,7 @@
     "clean": "rimraf out-tsc dist/*",
     "prebuild": "npm run clean",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve -H 0.0.0.0 --preserve-symlinks",
     "build": "ng build --prod",
     "test": "ng test",
     "test:once": "ng test --single-run",
