@@ -1,10 +1,11 @@
 import { TreeNode } from './tree-node';
+import { ConfirmationNeedingAction, TreeNodeAction, DeleteAction } from './confirmation-needing-action';
 
 export interface TreeViewerEmbeddedButton {
   visible: (node: TreeNode, level: number) => boolean;
   hoverText: (node: TreeNode) => string;
   cssClasses: string;
-  onClick: (node: TreeNode) => void;
+  onClick: TreeNodeAction | ConfirmationNeedingAction;
 }
 
 /**
@@ -14,11 +15,11 @@ export interface TreeViewerEmbeddedButton {
  */
 export class EmbeddedDeleteButton implements TreeViewerEmbeddedButton {
   cssClasses = 'embedded-delete-button fa fa-fw fa-times';
-  onClick: (node: TreeNode) => void;
+  onClick: DeleteAction;
   visible = (node, level) => level !== 0;
   hoverText = (node: TreeNode) => `delete '${node.name}'`;
 
-  constructor(deleteAction: (node: TreeNode) => void) {
+  constructor(deleteAction: DeleteAction) {
     this.onClick = deleteAction;
   }
 }

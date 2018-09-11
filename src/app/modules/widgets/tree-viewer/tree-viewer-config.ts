@@ -7,5 +7,5 @@ export interface TreeViewerConfig {
   onIconClick?: (node: TreeNode) => void;
   onTextClick?: (node: TreeNode) => void;
   onTextDoubleClick?: (node: TreeNode) => void;
-  embeddedButton?: TreeViewerEmbeddedButton;
+  embeddedButton?: (node: TreeNode) => TreeViewerEmbeddedButton;
 }

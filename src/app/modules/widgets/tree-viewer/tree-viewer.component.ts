@@ -2,10 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { MessagingService } from '@testeditor/messaging-service';
 
-import { ConfirmationNeedingAction } from './confirmation-needing-action';
+import { ConfirmationNeedingAction, isConfirmationNeedingAction } from './confirmation-needing-action';
 import { TreeNode } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
 import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
+import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
 
 @Component({
   selector: 'app-tree-viewer',
@@ -18,15 +19,19 @@ export class TreeViewerComponent implements OnInit {
   @Input() level = 0;
   @Input() config: TreeViewerConfig;
 
+  private embeddedButton: TreeViewerEmbeddedButton;
   private activeAction: ConfirmationNeedingAction = null;
   private get actionCssClasses(): string { return this.activeAction ? this.activeAction.messageCssClassses : ''; }
   private get embeddedButtonClasses(): string {
-    return this.config && this.config.embeddedButton && this.config.embeddedButton.cssClasses ? this.config.embeddedButton.cssClasses : '';
+    return this.embeddedButton && this.embeddedButton.cssClasses ? this.embeddedButton.cssClasses : '';
   }
 
   constructor(private messagingService: MessagingService) { }
 
   ngOnInit() {
+    if (this.model && this.config && this.config.embeddedButton) {
+      this.embeddedButton = this.config.embeddedButton(this.model);
+    }
   }
 
   get cssClasses(): string {
@@ -108,17 +113,21 @@ export class TreeViewerComponent implements OnInit {
   }
 
   onActionConfirmed() {
-    this.activeAction.onConfirm();
+    this.activeAction.onConfirm(this.model);
     this.activeAction = null;
   }
 
   showEmbeddedButton(): boolean {
-    return this.config && this.config.embeddedButton && this.config.embeddedButton.visible(this.model, this.level);
+    return this.embeddedButton && this.embeddedButton.visible(this.model, this.level);
   }
 
   onEmbeddedButtonClick() {
     if (this.config.embeddedButton) {
-      this.config.embeddedButton.onClick(this.model);
+      if (isConfirmationNeedingAction(this.embeddedButton.onClick)) {
+        this.commenceAction(this.embeddedButton.onClick);
+      } else {
+        this.embeddedButton.onClick(this.model);
+      }
     }
   }
 

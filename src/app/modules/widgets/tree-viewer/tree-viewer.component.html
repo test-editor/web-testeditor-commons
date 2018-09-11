@@ -19,7 +19,7 @@
 
       <div>
         <span *ngIf="showEmbeddedButton()"
-          [title]="config.embeddedButton.hoverText(model)"
+          [title]="embeddedButton.hoverText(model)"
           class="embedded-button" [ngClass]="embeddedButtonClasses"
           (click)="onEmbeddedButtonClick()"></span>
       </div>
