@@ -32,6 +32,9 @@
       <a href="#" class="confirm-action-confirm-button" [ngClass]="activeAction.confirmCssClasses" (click)="onActionConfirmed()">{{activeAction.confirmButtonText}}</a>
     </div>
   </div>
+  <div *ngIf="shouldShowNewElement()" [style.padding-left]="level * 12 + 'px'">
+    <app-new-element (cancelled)="onNewElementCancelled()" (succeeded)="onNewElementSucceeded()" [config]="newElementConfig"></app-new-element>
+  </div>
   <div *ngIf="model.expanded">
     <div *ngFor="let child of model.children">
       <app-tree-viewer [model]="child" [level]="level + 1" [config]="config"></app-tree-viewer>

@@ -1,5 +1,6 @@
 import { TreeNode } from './tree-node';
 import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
+import { NodeContext } from './new-element/new-element.component';
 
 export interface TreeViewerConfig {
   onClick?: (node: TreeNode) => void;
@@ -8,4 +9,6 @@ export interface TreeViewerConfig {
   onTextClick?: (node: TreeNode) => void;
   onTextDoubleClick?: (node: TreeNode) => void;
   embeddedButton?: (node: TreeNode) => TreeViewerEmbeddedButton;
+  createNewElement?: (context: NodeContext, newName: string) => boolean;
+  validateName?: (newName: string) => { valid: boolean, message?: string };
 }

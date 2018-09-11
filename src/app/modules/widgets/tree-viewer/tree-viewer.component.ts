@@ -7,6 +7,7 @@ import { TreeNode } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
 import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
 import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
+import { NewElementConfig, ContextType } from './new-element/new-element.component';
 
 @Component({
   selector: 'app-tree-viewer',
@@ -18,6 +19,21 @@ export class TreeViewerComponent implements OnInit {
   @Input() model: TreeNode;
   @Input() level = 0;
   @Input() config: TreeViewerConfig;
+
+  _newElementConfig: NewElementConfig;
+
+  get newElementConfig(): NewElementConfig {
+    if (!this._newElementConfig) {
+      this._newElementConfig = {
+        indent: this.isLeaf ? '0px' : '12px',
+        context: { node: this.model, type: this.isLeaf ? ContextType.Sibling : ContextType.Parent},
+        iconCssClasses: this.model.leafCssClasses,
+        createNewElement: this.config.createNewElement,
+        validateName: this.config.validateName ? this.config.validateName : () => ({valid: true})
+      };
+    }
+    return this._newElementConfig;
+  }
 
   private embeddedButton: TreeViewerEmbeddedButton;
   private activeAction: ConfirmationNeedingAction = null;
@@ -48,6 +64,10 @@ export class TreeViewerComponent implements OnInit {
     } else {
       return 'fa-question';
     }
+  }
+
+  get isLeaf(): boolean {
+    return this.model.expanded === undefined;
   }
 
   /** select this node, publish event that this node has been selected,
@@ -144,4 +164,14 @@ export class TreeViewerComponent implements OnInit {
     }
   }
 
+  shouldShowNewElement() {
+    return this.model.createInContextRequest && this.config.createNewElement;
+  }
+
+  onNewElementCancelled() {
+    this.model.createInContextRequest = false;
+  }
+  onNewElementSucceeded() {
+    this.model.createInContextRequest = false;
+  }
 }

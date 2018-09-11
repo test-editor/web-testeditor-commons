@@ -1,11 +1,14 @@
 import { Component, ViewChild, Input, ElementRef, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { TreeNode } from '../tree-node';
 
+export enum ContextType { Parent, Sibling }
+export interface NodeContext { node: TreeNode; type: ContextType; }
+
 export interface NewElementConfig {
   indent: string;
-  parentNode: TreeNode;
+  context: NodeContext;
   validateName: (newName: string) => { valid: boolean, message?: string };
-  createNewElement: (parentNode: TreeNode, newName: string) => boolean;
+  createNewElement: (context: NodeContext, newName: string) => boolean;
   iconCssClasses: string;
 }
 
@@ -41,7 +44,7 @@ export class NewElementComponent implements AfterViewInit {
 
   onEnter(): void {
     if (this.validate()) {
-      if (this.config.createNewElement(this.config.parentNode, this.input.nativeElement.value)) {
+      if (this.config.createNewElement(this.config.context, this.input.nativeElement.value)) {
         this.succeeded.emit();
       } else {
         this.errorMessage = 'Error while creating element!';

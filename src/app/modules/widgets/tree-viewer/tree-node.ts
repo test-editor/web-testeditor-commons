@@ -11,6 +11,7 @@ export interface TreeNode {
   cssClasses?: string;
   hover?: string;
   id?: string;
+  createInContextRequest?: boolean;
 }
 
 

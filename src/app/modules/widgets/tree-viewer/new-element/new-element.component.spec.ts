@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
-import { NewElementComponent, NewElementConfig } from './new-element.component';
+import { NewElementComponent, NewElementConfig, ContextType } from './new-element.component';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
@@ -14,7 +14,7 @@ class TestHostComponent {
     createNewElement: null,
     iconCssClasses: '',
     indent: '0px',
-    parentNode: null,
+    context: null,
     validateName: null
   };
   public cancelCounter = 0;
@@ -104,11 +104,11 @@ describe('NewElementComponent', () => {
 
   it('should call "createNewElement" callback when enter key is pressed and the input is valid', fakeAsync(() => {
     // given
-    let actualParentNode = null;
+    let actualContext = null;
     let actualName = '';
-    hostComponent.config.parentNode = { name: 'parent', children: [], root: null };
-    hostComponent.config.validateName = (name) => ({ valid: true });
-    hostComponent.config.createNewElement = (parentNode, name) => { actualParentNode = parentNode; actualName = name; return true; };
+    hostComponent.config.context = { node: { name: 'parent', children: [], root: null }, type: ContextType.Parent };
+    hostComponent.config.validateName = () => ({ valid: true });
+    hostComponent.config.createNewElement = (context, name) => { actualContext = context; actualName = name; return true; };
     const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
@@ -120,16 +120,16 @@ describe('NewElementComponent', () => {
     // then
     expect(fixture.debugElement.query(By.css('.alert'))).toBeFalsy('error field should not be present!');
     expect(inputField.classes['input-error']).toBeFalsy('input field should not contain "input-error" css class.');
-    expect(actualParentNode).toEqual(hostComponent.config.parentNode);
+    expect(actualContext).toEqual(hostComponent.config.context);
     expect(actualName).toEqual('Hello, World');
   }));
 
   it('should not call "createNewElement" callback when enter key is pressed and the input is invalid', fakeAsync(() => {
     // given
     let createNewElementWasCalled = false;
-    hostComponent.config.parentNode = { name: 'parent', children: [], root: null };
-    hostComponent.config.validateName = (name) => ({ valid: false, message: 'invalid input!' });
-    hostComponent.config.createNewElement = (parentNode, name) => { createNewElementWasCalled = true; return true; };
+    hostComponent.config.context = { node: { name: 'parent', children: [], root: null }, type: ContextType.Parent };
+    hostComponent.config.validateName = () => ({ valid: false, message: 'invalid input!' });
+    hostComponent.config.createNewElement = () => { createNewElementWasCalled = true; return true; };
     const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
@@ -149,9 +149,9 @@ describe('NewElementComponent', () => {
 
   it('should emit "succeeded" event when pressing enter and "createNewElement" returns true', fakeAsync(() => {
     // given
-    hostComponent.config.parentNode = { name: 'parent', children: [], root: null };
-    hostComponent.config.validateName = (name) => ({ valid: true });
-    hostComponent.config.createNewElement = (parentNode, name) => true;
+    hostComponent.config.context = { node: { name: 'parent', children: [], root: null }, type: ContextType.Parent };
+    hostComponent.config.validateName = () => ({ valid: true });
+    hostComponent.config.createNewElement = () => true;
     const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
@@ -168,7 +168,7 @@ describe('NewElementComponent', () => {
 
   it('must not emit "succeeded" event when pressing enter and "createNewElement" returns false', fakeAsync(() => {
     // given
-    hostComponent.config.parentNode = { name: 'parent', children: [], root: null };
+    hostComponent.config.context = { node: { name: 'parent', children: [], root: null }, type: ContextType.Parent };
     hostComponent.config.validateName = (name) => ({ valid: true });
     hostComponent.config.createNewElement = (parentNode, name) => false;
     const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
