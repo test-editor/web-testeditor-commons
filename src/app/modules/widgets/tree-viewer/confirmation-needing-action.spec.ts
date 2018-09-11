@@ -2,19 +2,19 @@ import { DeleteAction } from './confirmation-needing-action';
 
 describe('DeleteAction', () => {
   it('should create an instance', () => {
-    expect(new DeleteAction('', () => {})).toBeTruthy();
+    expect(new DeleteAction({ name: '', children: [], root: null}, () => {})).toBeTruthy();
   });
 
   it('sets all fields to values appropriate for delete action', () => {
     // given
     const actionClosure = () => {};
-    const elementName = 'theElement';
+    const treeNode = { name: 'elementName', children: [], root: null};
 
     // when
-    const actualActionObject = new DeleteAction(elementName, actionClosure);
+    const actualActionObject = new DeleteAction(treeNode, actionClosure);
 
     // then
-    expect(actualActionObject.message).toEqual('Are you sure you want to delete \'theElement\'?');
+    expect(actualActionObject.message).toEqual('Are you sure you want to delete \'elementName\'?');
     expect(actualActionObject.confirmButtonText).toEqual('Yes');
     expect(actualActionObject.cancelButtonText).toEqual('No');
     expect(actualActionObject.messageCssClassses).toEqual('alert alert-warning');

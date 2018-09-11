@@ -296,7 +296,7 @@ describe('TreeViewerComponent', () => {
     // given
     const treeNode = singleEmptyTreeNode();
     component.model = treeNode;
-    const action = new DeleteAction('elementName', () => {});
+    const action = new DeleteAction({ name: 'elementName', children: [], root: null}, () => {});
 
     // when
     component.commenceAction(action);
@@ -320,7 +320,7 @@ describe('TreeViewerComponent', () => {
     const treeNode = singleEmptyTreeNode();
     let actionHasBeenCalled = false;
     component.model = treeNode;
-    const action = new DeleteAction('elementName', () => actionHasBeenCalled = true);
+    const action = new DeleteAction({ name: 'elementName', children: [], root: null}, () => actionHasBeenCalled = true);
     component.commenceAction(action);
     fixture.detectChanges();
     const cancelButton = fixture.debugElement.query(By.css('.confirm-action-cancel-button'));
@@ -340,7 +340,7 @@ describe('TreeViewerComponent', () => {
     const treeNode = singleEmptyTreeNode();
     let actionHasBeenCalled = false;
     component.model = treeNode;
-    const action = new DeleteAction('elementName', () => actionHasBeenCalled = true);
+    const action = new DeleteAction({ name: 'elementName', children: [], root: null}, () => actionHasBeenCalled = true);
     component.commenceAction(action);
     fixture.detectChanges();
     const confirmButton = fixture.debugElement.query(By.css('.confirm-action-confirm-button'));
@@ -362,7 +362,7 @@ describe('TreeViewerComponent', () => {
     component.model = treeNode;
 
     // when
-    component.config = { embeddedButton: new EmbeddedDeleteButton(() => {}) };
+    component.config = { embeddedButton: (node) => new EmbeddedDeleteButton(new DeleteAction(node, () => {})) };
     fixture.detectChanges();
 
     // then
@@ -379,18 +379,20 @@ describe('TreeViewerComponent', () => {
     });
   });
 
-  it('performs the provided action when the embedded delete button is clicked', () => {
+  it('performs the provided action when the embedded delete button is clicked and the user confirms it', () => {
     // given
     const treeNode = treeNodeWithSubNodes();
     treeNode.expanded = true;
     component.model = treeNode;
     let actionPerformed = false;
-    component.config = { embeddedButton: new EmbeddedDeleteButton(() => actionPerformed = true) };
+    component.config = { embeddedButton: (node) => new EmbeddedDeleteButton(new DeleteAction(node, () => actionPerformed = true)) };
     fixture.detectChanges();
     const embeddedButton = fixture.debugElement.query(By.css('.tree-view-item-key .embedded-button'));
 
     // when
     embeddedButton.nativeElement.click();
+    fixture.detectChanges();
+    fixture.debugElement.query(By.css('.confirm-action-confirm-button')).nativeElement.click();
     fixture.detectChanges();
 
     // then

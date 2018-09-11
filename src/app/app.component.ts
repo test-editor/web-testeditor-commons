@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { TreeNode, forEach } from './modules/widgets/tree-viewer/tree-node';
 import { TreeViewerConfig } from './modules/widgets/tree-viewer/tree-viewer-config';
 import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-embedded-button';
+import { DeleteAction } from './modules/widgets/tree-viewer/confirmation-needing-action';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,8 @@ export class AppComponent {
     onDoubleClick: (node: TreeNode) => node.cssClasses = 'hidden',
     onIconClick: (node: TreeNode) => node.expanded = !node.expanded,
     onClick: (node: TreeNode) => node.expanded = !node.expanded,
-    embeddedButton: new EmbeddedDeleteButton((node) => console.log(`Delete button of node '${node.name}' was clicked!`))
+    embeddedButton: (node: TreeNode) => new EmbeddedDeleteButton(
+      new DeleteAction(node, (_node) => console.log(`Clicked delete button of node '${_node.name}'`)))
   };
 
   constructor() {

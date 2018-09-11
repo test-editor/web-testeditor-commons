@@ -1,14 +1,15 @@
 import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
 import { TreeNode } from './tree-node';
+import { DeleteAction } from './confirmation-needing-action';
 
 describe('EmbeddedDeleteButton', () => {
   it('should create an instance', () => {
-    expect(new EmbeddedDeleteButton(() => {})).toBeTruthy();
+    expect(new EmbeddedDeleteButton(new DeleteAction({ name: '', children: [], root: null}, () => {}))).toBeTruthy();
   });
 
   it('sets all fields to values appropriate for delete button', () => {
     // given
-    const buttonAction = () => {};
+    const buttonAction = new DeleteAction({ name: '', children: [], root: null}, () => {});
     const contextNode: TreeNode = {
       children: [],
       root: null,

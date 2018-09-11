@@ -1,3 +1,5 @@
+import { TreeNode } from './tree-node';
+
 export interface ConfirmationNeedingAction {
   message: string;
   messageCssClassses: string;
@@ -5,7 +7,19 @@ export interface ConfirmationNeedingAction {
   cancelButtonText: string;
   confirmCssClasses: string;
   cancelCssClasses: string;
-  onConfirm: () => void;
+  onConfirm: TreeNodeAction;
+}
+
+export type TreeNodeAction = (node: TreeNode) => void;
+
+export function isConfirmationNeedingAction(action: ConfirmationNeedingAction | TreeNodeAction): action is ConfirmationNeedingAction {
+  return action['message'] !== undefined &&
+         action['messageCssClassses'] !== undefined &&
+         action['confirmButtonText'] !== undefined &&
+         action['cancelButtonText'] !== undefined &&
+         action['confirmCssClasses'] !== undefined &&
+         action['cancelCssClasses'] !== undefined &&
+         action['onConfirm'] !== undefined;
 }
 
 export class DeleteAction implements ConfirmationNeedingAction {
@@ -14,10 +28,10 @@ export class DeleteAction implements ConfirmationNeedingAction {
   cancelButtonText: string;
   confirmCssClasses: string;
   cancelCssClasses: string;
-  onConfirm: () => void;
+  onConfirm: TreeNodeAction;
 
-  constructor(elementToDelete: string, onConfirm: () => void) {
-    this.message = `Are you sure you want to delete '${elementToDelete}'?`;
+  constructor(nodeToDelete: TreeNode, onConfirm: TreeNodeAction) {
+    this.message = `Are you sure you want to delete '${nodeToDelete.name}'?`;
     this.confirmButtonText = 'Yes';
     this.cancelButtonText = 'No';
 
