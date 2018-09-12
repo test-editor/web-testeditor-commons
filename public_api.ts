@@ -1,6 +1,10 @@
 export * from './src/app/modules/widgets/tree-viewer/tree-viewer.module';
 export * from './src/app/modules/widgets/tree-viewer/tree-node';
 export * from './src/app/modules/widgets/tree-viewer/tree-viewer-config';
+export { NewElementConfig } from './src/app/modules/widgets/tree-viewer/new-element/new-element.component';
 export * from './src/app/modules/services/browser-object-model/window.service';
 export * from './src/app/modules/services/browser-object-model/default.window.service';
 export * from './src/app/modules/event-types-out';
+export * from './src/app/modules/event-types-in';
+export * from './src/app/modules/widgets/tree-viewer/tree-viewer-embedded-button';
+export * from './src/app/modules/widgets/tree-viewer/confirmation-needing-action';
