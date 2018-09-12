@@ -22,7 +22,7 @@ export class AppComponent {
     expandedCssClasses: 'fa-chevron-down',
     leafCssClasses: 'fa-folder',
     cssClasses: '',
-    expanded: false,
+    expanded: true,
     children: [
       { name: 'child node 1', children: [], root: null, leafCssClasses: 'fa-file' },
       { name: 'child node 2', children: [], root: null, leafCssClasses: 'fa-file' },
