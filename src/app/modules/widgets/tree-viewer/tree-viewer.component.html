@@ -14,7 +14,16 @@
       <div class="tree-view-element">
         <span class="icon-type fa" [ngClass]="icon" (click)="onIconClick(model, $event)">
         </span>
-        <span title="{{model.hover}}" (click)="onTextClick(model, $event)" (dblclick)="onTextDoubleClick(model, $event)">{{model.name}}</span>
+        <span
+          *ngIf="!shouldShowRenameElement(); else rename"
+          title="{{model.hover}}"
+          (click)="onTextClick(model, $event)"
+          (dblclick)="onTextDoubleClick(model, $event)"
+        >{{model.name}}</span>
+        <ng-template #rename>
+          <app-rename-element (cancelled)="onRenameCancelled()" (succeeded)="onRenameSucceeded()" [config]="renameElementConfig"></app-rename-element>
+        </ng-template>
+
       </div>
 
       <div>
