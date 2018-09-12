@@ -1,0 +1,18 @@
+.navRenameElement {
+  display: inline;
+}
+
+input {
+  background-color: rgb(60, 60, 60);
+  border: 1px solid #094771;
+  color: rgb(204, 204, 204);
+  font: 13px Arial;
+  line-height: 15px;
+  text-overflow: ellipsis;
+  padding: 4px;
+}
+
+.input-error {
+  border-color: #F80B0B;
+  outline: 0 none;
+}
