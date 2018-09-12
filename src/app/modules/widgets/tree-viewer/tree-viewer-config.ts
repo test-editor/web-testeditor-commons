@@ -9,6 +9,4 @@ export interface TreeViewerConfig {
   onTextClick?: (node: TreeNode) => void;
   onTextDoubleClick?: (node: TreeNode) => void;
   embeddedButton?: (node: TreeNode) => TreeViewerEmbeddedButton;
-  createNewElement?: (context: NodeContext, newName: string) => boolean;
-  validateName?: (newName: string) => { valid: boolean, message?: string };
 }

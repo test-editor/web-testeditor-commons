@@ -1,4 +1,4 @@
-<div class="navNewElement" [style.padding-left]="config.indent">
+<div class="navNewElement" [style.padding-left]="config.indent ? '12px' : '0px'">
   <span class="icon-type fa" [ngClass]="config.iconCssClasses"></span>
   <input #theInput
     (keyup)="onKeyup($event)"

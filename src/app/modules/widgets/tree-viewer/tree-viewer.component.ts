@@ -8,6 +8,8 @@ import { TreeViewerConfig } from './tree-viewer-config';
 import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
 import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
 import { NewElementConfig, ContextType } from './new-element/new-element.component';
+import { TREE_NODE_CREATE_AT_SELECTED } from '../../event-types-in';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-tree-viewer',
@@ -20,20 +22,8 @@ export class TreeViewerComponent implements OnInit {
   @Input() level = 0;
   @Input() config: TreeViewerConfig;
 
-  _newElementConfig: NewElementConfig;
-
-  get newElementConfig(): NewElementConfig {
-    if (!this._newElementConfig) {
-      this._newElementConfig = {
-        indent: this.isLeaf ? '0px' : '12px',
-        context: { node: this.model, type: this.isLeaf ? ContextType.Sibling : ContextType.Parent},
-        iconCssClasses: this.model.leafCssClasses,
-        createNewElement: this.config.createNewElement,
-        validateName: this.config.validateName ? this.config.validateName : () => ({valid: true})
-      };
-    }
-    return this._newElementConfig;
-  }
+  private selectionContextSubscriptions: Subscription;
+  createNewElement: NewElementConfig = null;
 
   private embeddedButton: TreeViewerEmbeddedButton;
   private activeAction: ConfirmationNeedingAction = null;
@@ -82,13 +72,21 @@ export class TreeViewerComponent implements OnInit {
         if ((selectedNode !== node) && (selectedNode.root === this.model.root)) {
           node.selected = false;
           subscription.unsubscribe();
+          this.selectionContextSubscriptions.unsubscribe();
           this.messagingService.publish(TREE_NODE_DESELECTED, node);
         }
       });
 
+      this.subscribeToEventsInSelectionContext();
+
       this.messagingService.publish(TREE_NODE_SELECTED, node);
       this.log('published TREE_NODE_SELECTED', node);
     }
+  }
+
+  private subscribeToEventsInSelectionContext() {
+    this.selectionContextSubscriptions = this.messagingService.subscribe(TREE_NODE_CREATE_AT_SELECTED,
+      (payload) => this.createNewElement = payload);
   }
 
   onClick(node: TreeNode) {
@@ -164,14 +162,10 @@ export class TreeViewerComponent implements OnInit {
     }
   }
 
-  shouldShowNewElement() {
-    return this.model.createInContextRequest && this.config.createNewElement;
-  }
-
   onNewElementCancelled() {
-    this.model.createInContextRequest = false;
+    this.createNewElement = null;
   }
   onNewElementSucceeded() {
-    this.model.createInContextRequest = false;
+    this.createNewElement = null;
   }
 }

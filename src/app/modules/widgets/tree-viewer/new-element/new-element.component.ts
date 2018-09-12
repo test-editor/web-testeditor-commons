@@ -5,13 +5,11 @@ export enum ContextType { Parent, Sibling }
 export interface NodeContext { node: TreeNode; type: ContextType; }
 
 export interface NewElementConfig {
-  indent: string;
-  context: NodeContext;
+  indent: boolean;
   validateName: (newName: string) => { valid: boolean, message?: string };
-  createNewElement: (context: NodeContext, newName: string) => boolean;
+  createNewElement: (newName: string) => boolean;
   iconCssClasses: string;
 }
-
 
 @Component({
   selector: 'app-new-element',
@@ -44,7 +42,7 @@ export class NewElementComponent implements AfterViewInit {
 
   onEnter(): void {
     if (this.validate()) {
-      if (this.config.createNewElement(this.config.context, this.input.nativeElement.value)) {
+      if (this.config.createNewElement(this.input.nativeElement.value)) {
         this.succeeded.emit();
       } else {
         this.errorMessage = 'Error while creating element!';
