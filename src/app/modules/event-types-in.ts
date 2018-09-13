@@ -1,5 +1,7 @@
-// all events this components subscribes to for other components to publish
+// all events this library's components subscribe to and expect to be pushed by other components
 
+
+// request to let the user create a new node in the context of the currently selected tree node
 // payload NewElementConfig
 export interface NewElementConfig {
   indent: boolean;
