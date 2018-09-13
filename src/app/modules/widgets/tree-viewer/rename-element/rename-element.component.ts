@@ -15,7 +15,7 @@ export interface RenameElementConfig {
 export class RenameElementComponent implements AfterViewInit {
 
   @ViewChild('renameInput') input: ElementRef;
-  @Input() nodeToRename: TreeNode;
+  @Input() originalName: string;
   @Input() config: RenameElementConfig;
   @Output() cancelled = new EventEmitter<void>();
   @Output() succeeded = new EventEmitter<void>();
