@@ -34,9 +34,9 @@ export class NewElementComponent implements AfterViewInit {
     return nameCheckResult.valid;
   }
 
-  onEnter(): void {
+  async onEnter(): Promise<void> {
     if (this.validate()) {
-      if (this.config.createNewElement(this.input.nativeElement.value)) {
+      if (await this.config.createNewElement(this.input.nativeElement.value)) {
         this.succeeded.emit();
       } else {
         this.errorMessage = 'Error while creating element!';

@@ -106,7 +106,7 @@ describe('NewElementComponent', () => {
     // given
     let actualName = '';
     hostComponent.config.validateName = () => ({ valid: true });
-    hostComponent.config.createNewElement = (name) => { actualName = name; return true; };
+    hostComponent.config.createNewElement = (name) => { actualName = name; return Promise.resolve(true); };
     const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
@@ -125,7 +125,7 @@ describe('NewElementComponent', () => {
     // given
     let createNewElementWasCalled = false;
     hostComponent.config.validateName = () => ({ valid: false, message: 'invalid input!' });
-    hostComponent.config.createNewElement = () => { createNewElementWasCalled = true; return true; };
+    hostComponent.config.createNewElement = () => { createNewElementWasCalled = true; return Promise.resolve(true); };
     const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
@@ -146,7 +146,7 @@ describe('NewElementComponent', () => {
   it('should emit "succeeded" event when pressing enter and "createNewElement" returns true', fakeAsync(() => {
     // given
     hostComponent.config.validateName = () => ({ valid: true });
-    hostComponent.config.createNewElement = () => true;
+    hostComponent.config.createNewElement = () => Promise.resolve(true);
     const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
@@ -164,7 +164,7 @@ describe('NewElementComponent', () => {
   it('must not emit "succeeded" event when pressing enter and "createNewElement" returns false', fakeAsync(() => {
     // given
     hostComponent.config.validateName = (name) => ({ valid: true });
-    hostComponent.config.createNewElement = (name) => false;
+    hostComponent.config.createNewElement = (name) => Promise.resolve(false);
     const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));

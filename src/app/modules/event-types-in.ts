@@ -6,7 +6,7 @@
 export interface NewElementConfig {
   indent: boolean;
   validateName: (newName: string) => { valid: boolean, message?: string };
-  createNewElement: (newName: string) => boolean;
+  createNewElement: (newName: string) => Promise<boolean>;
   iconCssClasses: string;
 }
 export const TREE_NODE_CREATE_AT_SELECTED = 'treenode.create-at-selected';
@@ -15,6 +15,6 @@ export const TREE_NODE_CREATE_AT_SELECTED = 'treenode.create-at-selected';
 // payload: RenameElementConfig
 export interface RenameElementConfig {
   validateName: (newName: string) => { valid: boolean, message?: string };
-  renameElement: (newName: string) => boolean;
+  renameElement: (newName: string) => Promise<boolean>;
 }
 export const TREE_NODE_RENAME_SELECTED = 'treenode.rename-selected';

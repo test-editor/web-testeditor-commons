@@ -33,9 +33,9 @@ export class RenameElementComponent implements AfterViewInit {
     return nameCheckResult.valid;
   }
 
-  onEnter(): void {
+  async onEnter(): Promise<void> {
     if (this.validate()) {
-      if (this.config.renameElement(this.input.nativeElement.value)) {
+      if (await this.config.renameElement(this.input.nativeElement.value)) {
         this.succeeded.emit();
       } else {
         this.errorMessage = 'Error while creating element!';

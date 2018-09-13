@@ -46,42 +46,48 @@ export class AppComponent {
   }
 
   createNewFile() {
-    const payload: NewElementConfig = {
-      createNewElement: (name) => {
-        const contextTypeString = this.selectedNode.expanded !== undefined ? 'child' : 'sibling';
-        console.log(`Create file with name '${name}' as a ${contextTypeString} of '${this.selectedNode.name}'`);
-        return false;
-      },
-      iconCssClasses: 'fa-file',
-      indent: this.selectedNode.expanded !== undefined,
-      validateName: (name) => 'Ni!' === name ? { valid: false, message: 'You must not say Ni!'} : { valid: true }
-    };
-    this.messageBus.publish(TREE_NODE_CREATE_AT_SELECTED, payload);
+    if (this.selectedNode) {
+      const payload: NewElementConfig = {
+        createNewElement: (name) => {
+          const contextTypeString = this.selectedNode.expanded !== undefined ? 'child' : 'sibling';
+          console.log(`Create file with name '${name}' as a ${contextTypeString} of '${this.selectedNode.name}'`);
+          return Promise.resolve(false);
+        },
+        iconCssClasses: 'fa-file',
+        indent: this.selectedNode.expanded !== undefined,
+        validateName: (name) => 'Ni!' === name ? { valid: false, message: 'You must not say Ni!' } : { valid: true }
+      };
+      this.messageBus.publish(TREE_NODE_CREATE_AT_SELECTED, payload);
+    }
   }
 
   createNewFolder() {
-    const payload: NewElementConfig = {
-      createNewElement: (name) => {
-        const contextTypeString = this.selectedNode.expanded !== undefined ? 'child' : 'sibling';
-        console.log(`Create folder with name '${name}' as a ${contextTypeString} of '${this.selectedNode.name}'`);
-        return true;
-      },
-      iconCssClasses: 'fa-folder',
-      indent: this.selectedNode.expanded !== undefined,
-      validateName: (name) => 'Ni!' === name ? { valid: false, message: 'You must not say Ni!'} : { valid: true }
-    };
-    this.messageBus.publish(TREE_NODE_CREATE_AT_SELECTED, payload);
+    if (this.selectedNode) {
+      const payload: NewElementConfig = {
+        createNewElement: (name) => {
+          const contextTypeString = this.selectedNode.expanded !== undefined ? 'child' : 'sibling';
+          console.log(`Create folder with name '${name}' as a ${contextTypeString} of '${this.selectedNode.name}'`);
+          return Promise.resolve(true);
+        },
+        iconCssClasses: 'fa-folder',
+        indent: this.selectedNode.expanded !== undefined,
+        validateName: (name) => 'Ni!' === name ? { valid: false, message: 'You must not say Ni!' } : { valid: true }
+      };
+      this.messageBus.publish(TREE_NODE_CREATE_AT_SELECTED, payload);
+    }
   }
 
   rename() {
-    const payload: RenameElementConfig = {
-      renameElement: (name) => {
-        console.log(`renaming '${this.selectedNode.name}' to '${name}'`);
-        this.selectedNode.name = name;
-        return true;
-      },
-      validateName: (name) => 'Ni!' === name ? { valid: false, message: 'You must not say Ni!'} : { valid: true }
-    };
-    this.messageBus.publish(TREE_NODE_RENAME_SELECTED, payload);
+    if (this.selectedNode) {
+      const payload: RenameElementConfig = {
+        renameElement: (name) => {
+          console.log(`renaming '${this.selectedNode.name}' to '${name}'`);
+          this.selectedNode.name = name;
+          return Promise.resolve(true);
+        },
+        validateName: (name) => 'Ni!' === name ? { valid: false, message: 'You must not say Ni!' } : { valid: true }
+      };
+      this.messageBus.publish(TREE_NODE_RENAME_SELECTED, payload);
+    }
   }
 }
