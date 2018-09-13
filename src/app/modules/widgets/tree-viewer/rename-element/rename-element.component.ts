@@ -1,11 +1,6 @@
 import { Component, ViewChild, Input, ElementRef, AfterViewInit, Output, EventEmitter } from '@angular/core';
-import { MessagingService } from '@testeditor/messaging-service';
 import { TreeNode } from '../tree-node';
-
-export interface RenameElementConfig {
-  validateName: (newName: string) => { valid: boolean, message?: string };
-  renameElement: (newName: string) => boolean;
-}
+import { RenameElementConfig } from '../../../event-types-in';
 
 @Component({
   selector: 'app-rename-element',

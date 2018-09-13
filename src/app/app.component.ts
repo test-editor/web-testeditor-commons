@@ -4,9 +4,8 @@ import { TreeViewerConfig } from './modules/widgets/tree-viewer/tree-viewer-conf
 import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-embedded-button';
 import { DeleteAction } from './modules/widgets/tree-viewer/confirmation-needing-action';
 import { MessagingService } from '@testeditor/messaging-service';
-import { TREE_NODE_CREATE_AT_SELECTED, NewElementConfig, TREE_NODE_RENAME_SELECTED } from './modules/event-types-in';
+import { TREE_NODE_CREATE_AT_SELECTED, NewElementConfig, RenameElementConfig, TREE_NODE_RENAME_SELECTED } from './modules/event-types-in';
 import { TREE_NODE_SELECTED } from './modules/event-types-out';
-import { RenameElementConfig } from './modules/widgets/tree-viewer/rename-element/rename-element.component';
 
 @Component({
   selector: 'app-root',
