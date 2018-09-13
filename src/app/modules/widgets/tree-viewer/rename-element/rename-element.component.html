@@ -7,7 +7,7 @@
     [ngClass]="{
       'input-error': errorMessage
     }"
-    value="{{originalName}}"
+    value="{{nodeToRename.name}}"
   />
   <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
 </div>

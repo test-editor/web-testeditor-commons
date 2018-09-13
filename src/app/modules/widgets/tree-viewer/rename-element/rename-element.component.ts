@@ -3,9 +3,8 @@ import { MessagingService } from '@testeditor/messaging-service';
 import { TreeNode } from '../tree-node';
 
 export interface RenameElementConfig {
-  element: TreeNode;
   validateName: (newName: string) => { valid: boolean, message?: string };
-  renameElement: (Element, newName: string) => boolean;
+  renameElement: (newName: string) => boolean;
 }
 
 @Component({
@@ -16,6 +15,7 @@ export interface RenameElementConfig {
 export class RenameElementComponent implements AfterViewInit {
 
   @ViewChild('renameInput') input: ElementRef;
+  @Input() nodeToRename: TreeNode;
   @Input() config: RenameElementConfig;
   @Output() cancelled = new EventEmitter<void>();
   @Output() succeeded = new EventEmitter<void>();
@@ -40,7 +40,7 @@ export class RenameElementComponent implements AfterViewInit {
 
   onEnter(): void {
     if (this.validate()) {
-      if (this.config.renameElement(this.config.element, this.input.nativeElement.value)) {
+      if (this.config.renameElement(this.input.nativeElement.value)) {
         this.succeeded.emit();
       } else {
         this.errorMessage = 'Error while creating element!';

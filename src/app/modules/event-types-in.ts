@@ -10,3 +10,6 @@ export interface NewElementConfig {
   iconCssClasses: string;
 }
 export const TREE_NODE_CREATE_AT_SELECTED = 'treenode.create-at-selected';
+
+// request to let the user rename the currently selected tree node
+export const TREE_NODE_RENAME_SELECTED = 'treenode.rename-selected';
