@@ -7,8 +7,8 @@ import { TreeNode } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
 import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
 import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
-import { NewElementConfig, ContextType } from './new-element/new-element.component';
-import { TREE_NODE_CREATE_AT_SELECTED } from '../../event-types-in';
+import { ContextType } from './new-element/new-element.component';
+import { NewElementConfig, TREE_NODE_CREATE_AT_SELECTED } from '../../event-types-in';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({

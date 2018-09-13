@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
-import { NewElementComponent, NewElementConfig, ContextType } from './new-element.component';
+import { NewElementComponent, ContextType } from './new-element.component';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { NewElementConfig } from '../../../event-types-in';
 
 
 @Component({

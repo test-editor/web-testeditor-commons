@@ -3,9 +3,8 @@ import { TreeNode, forEach } from './modules/widgets/tree-viewer/tree-node';
 import { TreeViewerConfig } from './modules/widgets/tree-viewer/tree-viewer-config';
 import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-embedded-button';
 import { DeleteAction } from './modules/widgets/tree-viewer/confirmation-needing-action';
-import { NewElementConfig } from './modules/widgets/tree-viewer/new-element/new-element.component';
 import { MessagingService } from '@testeditor/messaging-service';
-import { TREE_NODE_CREATE_AT_SELECTED } from './modules/event-types-in';
+import { TREE_NODE_CREATE_AT_SELECTED, NewElementConfig } from './modules/event-types-in';
 import { TREE_NODE_SELECTED } from './modules/event-types-out';
 
 @Component({

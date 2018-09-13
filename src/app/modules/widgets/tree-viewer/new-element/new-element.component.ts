@@ -1,15 +1,9 @@
 import { Component, ViewChild, Input, ElementRef, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { TreeNode } from '../tree-node';
+import { NewElementConfig } from '../../../event-types-in';
 
 export enum ContextType { Parent, Sibling }
 export interface NodeContext { node: TreeNode; type: ContextType; }
-
-export interface NewElementConfig {
-  indent: boolean;
-  validateName: (newName: string) => { valid: boolean, message?: string };
-  createNewElement: (newName: string) => boolean;
-  iconCssClasses: string;
-}
 
 @Component({
   selector: 'app-new-element',
