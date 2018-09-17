@@ -21,11 +21,11 @@
           (dblclick)="onTextDoubleClick(model, $event)"
         >{{model.name}}</span>
         <ng-template #rename>
-          <app-rename-element
+          <app-input-box
             (cancelled)="onRenameCancelled()"
             (succeeded)="onRenameSucceeded()"
             [config]="renameElement"
-            [originalName]="model.name"></app-rename-element>
+            [value]="model.name"></app-input-box>
         </ng-template>
 
       </div>

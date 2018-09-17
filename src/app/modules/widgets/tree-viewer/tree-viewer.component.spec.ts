@@ -1,15 +1,14 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick, inject } from '@angular/core/testing';
-
-import { TreeViewerComponent } from './tree-viewer.component';
-import { TreeNode, forEach } from './tree-node';
-import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-import { DeleteAction } from './confirmation-needing-action';
-import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
+import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
+import { InputBoxConfig, TreeViewerInputBoxConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED } from '../../event-types-in';
+import { DeleteAction } from './confirmation-needing-action';
 import { InputBoxComponent } from './input-box/input-box.component';
-import { RenameElementComponent } from './rename-element/rename-element.component';
-import { TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED, InputBoxConfig, TreeViewerInputBoxConfig } from '../../event-types-in';
+import { forEach, TreeNode } from './tree-node';
+import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
+import { TreeViewerComponent } from './tree-viewer.component';
+
 
 describe('TreeViewerComponent', () => {
   let component: TreeViewerComponent;
@@ -48,7 +47,7 @@ describe('TreeViewerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ MessagingModule.forRoot() ],
-      declarations: [ TreeViewerComponent, InputBoxComponent, RenameElementComponent ]
+      declarations: [ TreeViewerComponent, InputBoxComponent ]
     })
     .compileComponents();
   }));
@@ -540,7 +539,7 @@ describe('TreeViewerComponent', () => {
     fixture.detectChanges();
 
     // then
-    const renameInputField = fixture.debugElement.query(By.css('.navRenameElement > input'));
+    const renameInputField = fixture.debugElement.query(By.css('.navInputBox > input'));
     expect(renameInputField.nativeElement.value).toEqual('tree node');
   }));
 

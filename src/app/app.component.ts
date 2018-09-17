@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { TreeNode, forEach } from './modules/widgets/tree-viewer/tree-node';
+import { MessagingService } from '@testeditor/messaging-service';
+import { InputBoxConfig, TreeViewerInputBoxConfig,
+  TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED } from './modules/event-types-in';
+import { TREE_NODE_SELECTED } from './modules/event-types-out';
+import { DeleteAction } from './modules/widgets/tree-viewer/confirmation-needing-action';
+import { forEach, TreeNode } from './modules/widgets/tree-viewer/tree-node';
 import { TreeViewerConfig } from './modules/widgets/tree-viewer/tree-viewer-config';
 import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-embedded-button';
-import { DeleteAction } from './modules/widgets/tree-viewer/confirmation-needing-action';
-import { MessagingService } from '@testeditor/messaging-service';
-import { TREE_NODE_CREATE_AT_SELECTED, InputBoxConfig, TREE_NODE_RENAME_SELECTED, TreeViewerInputBoxConfig } from './modules/event-types-in';
-import { TREE_NODE_SELECTED } from './modules/event-types-out';
 
 @Component({
   selector: 'app-root',
