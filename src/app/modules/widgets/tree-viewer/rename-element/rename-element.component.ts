@@ -1,6 +1,6 @@
 import { Component, ViewChild, Input, ElementRef, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { TreeNode } from '../tree-node';
-import { RenameElementConfig } from '../../../event-types-in';
+import { InputBoxConfig } from '../../../event-types-in';
 
 @Component({
   selector: 'app-rename-element',
@@ -11,7 +11,7 @@ export class RenameElementComponent implements AfterViewInit {
 
   @ViewChild('renameInput') input: ElementRef;
   @Input() originalName: string;
-  @Input() config: RenameElementConfig;
+  @Input() config: InputBoxConfig;
   @Output() cancelled = new EventEmitter<void>();
   @Output() succeeded = new EventEmitter<void>();
 
@@ -35,7 +35,7 @@ export class RenameElementComponent implements AfterViewInit {
 
   async onEnter(): Promise<void> {
     if (this.validate()) {
-      if (await this.config.renameElement(this.input.nativeElement.value)) {
+      if (await this.config.onConfirm(this.input.nativeElement.value)) {
         this.succeeded.emit();
       } else {
         this.errorMessage = 'Error while creating element!';

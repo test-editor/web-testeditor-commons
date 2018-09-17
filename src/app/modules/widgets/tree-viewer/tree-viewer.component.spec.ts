@@ -6,10 +6,10 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { DeleteAction } from './confirmation-needing-action';
 import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
-import { NewElementComponent } from './new-element/new-element.component';
 import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
+import { InputBoxComponent } from './input-box/input-box.component';
 import { RenameElementComponent } from './rename-element/rename-element.component';
-import { NewElementConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED, RenameElementConfig } from '../../event-types-in';
+import { TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED, InputBoxConfig, TreeViewerInputBoxConfig } from '../../event-types-in';
 
 describe('TreeViewerComponent', () => {
   let component: TreeViewerComponent;
@@ -48,7 +48,7 @@ describe('TreeViewerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ MessagingModule.forRoot() ],
-      declarations: [ TreeViewerComponent, NewElementComponent, RenameElementComponent ]
+      declarations: [ TreeViewerComponent, InputBoxComponent, RenameElementComponent ]
     })
     .compileComponents();
   }));
@@ -464,8 +464,8 @@ describe('TreeViewerComponent', () => {
     inject([MessagingService], (messageBus: MessagingService) => {
     // given
     component.model = singleEmptyTreeNode();
-    const newElementRequest: NewElementConfig = {
-      createNewElement: () => Promise.resolve(true),
+    const newElementRequest: TreeViewerInputBoxConfig = {
+      onConfirm: () => Promise.resolve(true),
       iconCssClasses: 'testCssClass',
       indent: false,
       validateName: () => ({ valid: false })
@@ -477,7 +477,7 @@ describe('TreeViewerComponent', () => {
     fixture.detectChanges();
 
     // then
-    const newElementIcon = fixture.debugElement.query(By.css('.navNewElement > span'));
+    const newElementIcon = fixture.debugElement.query(By.css('.navInputBox > span'));
     expect(newElementIcon.classes['testCssClass']).toBeTruthy();
   }));
 
@@ -485,8 +485,8 @@ describe('TreeViewerComponent', () => {
     inject([MessagingService], (messageBus: MessagingService) => {
     // given
     component.model = singleEmptyTreeNode();
-    const newElementRequest: NewElementConfig = {
-      createNewElement: () => Promise.resolve(true),
+    const newElementRequest: TreeViewerInputBoxConfig = {
+      onConfirm: () => Promise.resolve(true),
       iconCssClasses: 'testCssClass',
       indent: false,
       validateName: () => ({ valid: false })
@@ -500,15 +500,15 @@ describe('TreeViewerComponent', () => {
     fixture.detectChanges();
 
     // then
-    expect(fixture.debugElement.query(By.css('.navNewElement'))).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('.navInputBox'))).toBeFalsy();
   }));
 
   it('hides the new element input box when element creation success is signalled',
     inject([MessagingService], (messageBus: MessagingService) => {
     // given
     component.model = singleEmptyTreeNode();
-    const newElementRequest: NewElementConfig = {
-      createNewElement: () => Promise.resolve(true),
+    const newElementRequest: TreeViewerInputBoxConfig = {
+      onConfirm: () => Promise.resolve(true),
       iconCssClasses: 'testCssClass',
       indent: false,
       validateName: () => ({ valid: true })
@@ -522,15 +522,15 @@ describe('TreeViewerComponent', () => {
     fixture.detectChanges();
 
     // then
-    expect(fixture.debugElement.query(By.css('.navNewElement'))).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('.navInputBox'))).toBeFalsy();
   }));
 
   it('displays rename element input box when receiving TREE_NODE_RENAME_SELECTED event',
     inject([MessagingService], (messageBus: MessagingService) => {
     // given
     component.model = singleEmptyTreeNode();
-    const renameRequest: RenameElementConfig = {
-      renameElement: () => Promise.resolve(true),
+    const renameRequest: InputBoxConfig = {
+      onConfirm: () => Promise.resolve(true),
       validateName: () => ({ valid: false })
     };
     component.select(component.model);
@@ -548,8 +548,8 @@ describe('TreeViewerComponent', () => {
     inject([MessagingService], (messageBus: MessagingService) => {
     // given
     component.model = singleEmptyTreeNode();
-    const renameRequest: RenameElementConfig = {
-      renameElement: () => Promise.resolve(true),
+    const renameRequest: InputBoxConfig = {
+      onConfirm: () => Promise.resolve(true),
       validateName: () => ({ valid: false })
     };
     component.select(component.model);
@@ -568,8 +568,8 @@ describe('TreeViewerComponent', () => {
     inject([MessagingService], (messageBus: MessagingService) => {
     // given
     component.model = singleEmptyTreeNode();
-    const renameRequest: RenameElementConfig = {
-      renameElement: () => Promise.resolve(true),
+    const renameRequest: InputBoxConfig = {
+      onConfirm: () => Promise.resolve(true),
       validateName: () => ({ valid: false })
     };
     component.select(component.model);

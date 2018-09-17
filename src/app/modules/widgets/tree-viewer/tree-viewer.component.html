@@ -46,7 +46,7 @@
     </div>
   </div>
   <div *ngIf="createNewElement" [style.padding-left]="level * 12 + 'px'">
-    <app-new-element (cancelled)="onNewElementCancelled()" (succeeded)="onNewElementSucceeded()" [config]="createNewElement"></app-new-element>
+    <app-input-box (cancelled)="onNewElementCancelled()" (succeeded)="onNewElementSucceeded()" [config]="createNewElement"></app-input-box>
   </div>
   <div *ngIf="model.expanded">
     <div *ngFor="let child of model.children">

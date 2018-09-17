@@ -4,7 +4,7 @@ import { TreeViewerConfig } from './modules/widgets/tree-viewer/tree-viewer-conf
 import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-embedded-button';
 import { DeleteAction } from './modules/widgets/tree-viewer/confirmation-needing-action';
 import { MessagingService } from '@testeditor/messaging-service';
-import { TREE_NODE_CREATE_AT_SELECTED, NewElementConfig, RenameElementConfig, TREE_NODE_RENAME_SELECTED } from './modules/event-types-in';
+import { TREE_NODE_CREATE_AT_SELECTED, InputBoxConfig, TREE_NODE_RENAME_SELECTED, TreeViewerInputBoxConfig } from './modules/event-types-in';
 import { TREE_NODE_SELECTED } from './modules/event-types-out';
 
 @Component({
@@ -47,8 +47,8 @@ export class AppComponent {
 
   createNewFile() {
     if (this.selectedNode) {
-      const payload: NewElementConfig = {
-        createNewElement: (name) => {
+      const payload: TreeViewerInputBoxConfig = {
+        onConfirm: (name) => {
           const contextTypeString = this.selectedNode.expanded !== undefined ? 'child' : 'sibling';
           console.log(`Create file with name '${name}' as a ${contextTypeString} of '${this.selectedNode.name}'`);
           return Promise.resolve(false);
@@ -63,8 +63,8 @@ export class AppComponent {
 
   createNewFolder() {
     if (this.selectedNode) {
-      const payload: NewElementConfig = {
-        createNewElement: (name) => {
+      const payload: TreeViewerInputBoxConfig = {
+        onConfirm: (name) => {
           const contextTypeString = this.selectedNode.expanded !== undefined ? 'child' : 'sibling';
           console.log(`Create folder with name '${name}' as a ${contextTypeString} of '${this.selectedNode.name}'`);
           return Promise.resolve(true);
@@ -79,8 +79,8 @@ export class AppComponent {
 
   rename() {
     if (this.selectedNode) {
-      const payload: RenameElementConfig = {
-        renameElement: (name) => {
+      const payload: InputBoxConfig = {
+        onConfirm: (name) => {
           console.log(`renaming '${this.selectedNode.name}' to '${name}'`);
           this.selectedNode.name = name;
           return Promise.resolve(true);

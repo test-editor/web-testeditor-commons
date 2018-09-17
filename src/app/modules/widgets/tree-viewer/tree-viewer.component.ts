@@ -7,7 +7,7 @@ import { TreeNode } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
 import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
 import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
-import { NewElementConfig, RenameElementConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED } from '../../event-types-in';
+import { InputBoxConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED, TreeViewerInputBoxConfig } from '../../event-types-in';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -22,8 +22,8 @@ export class TreeViewerComponent implements OnInit {
   @Input() config: TreeViewerConfig;
 
   private selectionContextSubscriptions: Subscription;
-  createNewElement: NewElementConfig = null;
-  renameElement: RenameElementConfig = null;
+  createNewElement: TreeViewerInputBoxConfig = null;
+  renameElement: InputBoxConfig = null;
 
   private embeddedButton: TreeViewerEmbeddedButton;
   private activeAction: ConfirmationNeedingAction = null;

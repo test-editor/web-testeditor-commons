@@ -1,23 +1,37 @@
 import { Component, ViewChild, Input, ElementRef, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { TreeNode } from '../tree-node';
-import { NewElementConfig } from '../../../event-types-in';
+import { InputBoxConfig, TreeViewerInputBoxConfig } from '../../../event-types-in';
 
 export enum ContextType { Parent, Sibling }
 export interface NodeContext { node: TreeNode; type: ContextType; }
 
 @Component({
-  selector: 'app-new-element',
-  templateUrl: './new-element.component.html',
-  styleUrls: ['./new-element.component.css']
+  selector: 'app-input-box',
+  templateUrl: './input-box.component.html',
+  styleUrls: ['./input-box.component.css']
 })
-export class NewElementComponent implements AfterViewInit {
+export class InputBoxComponent implements AfterViewInit {
 
   @ViewChild('theInput') input: ElementRef;
-  @Input() config: NewElementConfig;
+  @Input() config: InputBoxConfig | TreeViewerInputBoxConfig;
+  @Input() value: string;
   @Output() cancelled = new EventEmitter<void>();
   @Output() succeeded = new EventEmitter<void>();
 
   errorMessage: string;
+
+  get indent(): boolean {
+    return this.isTreeViewerInputBoxConfig(this.config) ? this.config.indent : false;
+  }
+
+  get iconCssClasses(): string {
+    return this.isTreeViewerInputBoxConfig(this.config) ? this.config.iconCssClasses : '';
+  }
+
+  isTreeViewerInputBoxConfig(config: InputBoxConfig | TreeViewerInputBoxConfig): config is TreeViewerInputBoxConfig {
+    const extendedConfig = <TreeViewerInputBoxConfig>config;
+    return extendedConfig.indent !== undefined && extendedConfig.iconCssClasses !== undefined;
+  }
 
   ngAfterViewInit(): void {
     this.input.nativeElement.focus();
@@ -36,10 +50,10 @@ export class NewElementComponent implements AfterViewInit {
 
   async onEnter(): Promise<void> {
     if (this.validate()) {
-      if (await this.config.createNewElement(this.input.nativeElement.value)) {
+      if (await this.config.onConfirm(this.input.nativeElement.value)) {
         this.succeeded.emit();
       } else {
-        this.errorMessage = 'Error while creating element!';
+        this.errorMessage = 'Action did not succeed.';
       }
     }
   }
