@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick, inject } from '@angular/core/testing';
 
 import { TreeViewerComponent } from './tree-viewer.component';
 import { TreeNode, forEach } from './tree-node';
@@ -6,9 +6,10 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { DeleteAction } from './confirmation-needing-action';
 import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
-import { MessagingModule } from '@testeditor/messaging-service';
 import { NewElementComponent } from './new-element/new-element.component';
+import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
 import { RenameElementComponent } from './rename-element/rename-element.component';
+import { NewElementConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED, RenameElementConfig } from '../../event-types-in';
 
 describe('TreeViewerComponent', () => {
   let component: TreeViewerComponent;
@@ -459,4 +460,127 @@ describe('TreeViewerComponent', () => {
     expect(treeNode.selected).toBeTruthy();
   });
 
+  it('displays new element input box with css settings when receiving TREE_NODE_CREATE_AT_SELECTED event',
+    inject([MessagingService], (messageBus: MessagingService) => {
+    // given
+    component.model = singleEmptyTreeNode();
+    const newElementRequest: NewElementConfig = {
+      createNewElement: () => Promise.resolve(true),
+      iconCssClasses: 'testCssClass',
+      indent: false,
+      validateName: () => ({ valid: false })
+    };
+    component.select(component.model);
+
+    // when
+    messageBus.publish(TREE_NODE_CREATE_AT_SELECTED, newElementRequest);
+    fixture.detectChanges();
+
+    // then
+    const newElementIcon = fixture.debugElement.query(By.css('.navNewElement > span'));
+    expect(newElementIcon.classes['testCssClass']).toBeTruthy();
+  }));
+
+  it('hides the new element input box when the user cancels it',
+    inject([MessagingService], (messageBus: MessagingService) => {
+    // given
+    component.model = singleEmptyTreeNode();
+    const newElementRequest: NewElementConfig = {
+      createNewElement: () => Promise.resolve(true),
+      iconCssClasses: 'testCssClass',
+      indent: false,
+      validateName: () => ({ valid: false })
+    };
+    component.select(component.model);
+    messageBus.publish(TREE_NODE_CREATE_AT_SELECTED, newElementRequest);
+    fixture.detectChanges();
+
+    // when
+    component.onNewElementCancelled();
+    fixture.detectChanges();
+
+    // then
+    expect(fixture.debugElement.query(By.css('.navNewElement'))).toBeFalsy();
+  }));
+
+  it('hides the new element input box when element creation success is signalled',
+    inject([MessagingService], (messageBus: MessagingService) => {
+    // given
+    component.model = singleEmptyTreeNode();
+    const newElementRequest: NewElementConfig = {
+      createNewElement: () => Promise.resolve(true),
+      iconCssClasses: 'testCssClass',
+      indent: false,
+      validateName: () => ({ valid: true })
+    };
+    component.select(component.model);
+    messageBus.publish(TREE_NODE_CREATE_AT_SELECTED, newElementRequest);
+    fixture.detectChanges();
+
+    // when
+    component.onNewElementSucceeded();
+    fixture.detectChanges();
+
+    // then
+    expect(fixture.debugElement.query(By.css('.navNewElement'))).toBeFalsy();
+  }));
+
+  it('displays rename element input box when receiving TREE_NODE_RENAME_SELECTED event',
+    inject([MessagingService], (messageBus: MessagingService) => {
+    // given
+    component.model = singleEmptyTreeNode();
+    const renameRequest: RenameElementConfig = {
+      renameElement: () => Promise.resolve(true),
+      validateName: () => ({ valid: false })
+    };
+    component.select(component.model);
+
+    // when
+    messageBus.publish(TREE_NODE_RENAME_SELECTED, renameRequest);
+    fixture.detectChanges();
+
+    // then
+    const renameInputField = fixture.debugElement.query(By.css('.navRenameElement > input'));
+    expect(renameInputField.nativeElement.value).toEqual('tree node');
+  }));
+
+  it('hides the rename element input box when the user cancels it',
+    inject([MessagingService], (messageBus: MessagingService) => {
+    // given
+    component.model = singleEmptyTreeNode();
+    const renameRequest: RenameElementConfig = {
+      renameElement: () => Promise.resolve(true),
+      validateName: () => ({ valid: false })
+    };
+    component.select(component.model);
+    messageBus.publish(TREE_NODE_RENAME_SELECTED, renameRequest);
+    fixture.detectChanges();
+
+    // when
+    component.onRenameCancelled();
+    fixture.detectChanges();
+
+    // then
+    expect(fixture.debugElement.query(By.css('.navRenameElement'))).toBeFalsy();
+  }));
+
+  it('hides the rename element input box when element creation success is signalled',
+    inject([MessagingService], (messageBus: MessagingService) => {
+    // given
+    component.model = singleEmptyTreeNode();
+    const renameRequest: RenameElementConfig = {
+      renameElement: () => Promise.resolve(true),
+      validateName: () => ({ valid: false })
+    };
+    component.select(component.model);
+    messageBus.publish(TREE_NODE_RENAME_SELECTED, renameRequest);
+    fixture.detectChanges();
+
+    // when
+    component.onRenameSucceeded();
+    fixture.detectChanges();
+
+    // then
+    expect(fixture.debugElement.query(By.css('.navRenameElement'))).toBeFalsy();
+  }));
 });
