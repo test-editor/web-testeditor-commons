@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
-import { InputBoxComponent, ContextType } from './input-box.component';
+import { InputBoxComponent } from './input-box.component';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { TreeViewerInputBoxConfig, InputBoxConfig } from '../../../event-types-in';
