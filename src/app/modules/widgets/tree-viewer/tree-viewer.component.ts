@@ -56,10 +56,6 @@ export class TreeViewerComponent implements OnInit {
     }
   }
 
-  get isLeaf(): boolean {
-    return this.model.expanded === undefined;
-  }
-
   /** select this node, publish event that this node has been selected,
       register for selection events (react to selections of other nodes of the same tree and deselect) */
   public select(node: TreeNode): void {
