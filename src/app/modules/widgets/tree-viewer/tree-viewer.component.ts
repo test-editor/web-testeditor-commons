@@ -7,6 +7,9 @@ import { TreeNode } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
 import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
 import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
+import { ContextType } from './new-element/new-element.component';
+import { NewElementConfig, TREE_NODE_CREATE_AT_SELECTED } from '../../event-types-in';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-tree-viewer',
@@ -18,6 +21,9 @@ export class TreeViewerComponent implements OnInit {
   @Input() model: TreeNode;
   @Input() level = 0;
   @Input() config: TreeViewerConfig;
+
+  private selectionContextSubscriptions: Subscription;
+  createNewElement: NewElementConfig = null;
 
   private embeddedButton: TreeViewerEmbeddedButton;
   private activeAction: ConfirmationNeedingAction = null;
@@ -50,6 +56,10 @@ export class TreeViewerComponent implements OnInit {
     }
   }
 
+  get isLeaf(): boolean {
+    return this.model.expanded === undefined;
+  }
+
   /** select this node, publish event that this node has been selected,
       register for selection events (react to selections of other nodes of the same tree and deselect) */
   public select(node: TreeNode): void {
@@ -62,13 +72,21 @@ export class TreeViewerComponent implements OnInit {
         if ((selectedNode !== node) && (selectedNode.root === this.model.root)) {
           node.selected = false;
           subscription.unsubscribe();
+          this.selectionContextSubscriptions.unsubscribe();
           this.messagingService.publish(TREE_NODE_DESELECTED, node);
         }
       });
 
+      this.subscribeToEventsInSelectionContext();
+
       this.messagingService.publish(TREE_NODE_SELECTED, node);
       this.log('published TREE_NODE_SELECTED', node);
     }
+  }
+
+  private subscribeToEventsInSelectionContext() {
+    this.selectionContextSubscriptions = this.messagingService.subscribe(TREE_NODE_CREATE_AT_SELECTED,
+      (payload) => this.createNewElement = payload);
   }
 
   onClick(node: TreeNode) {
@@ -144,4 +162,10 @@ export class TreeViewerComponent implements OnInit {
     }
   }
 
+  onNewElementCancelled() {
+    this.createNewElement = null;
+  }
+  onNewElementSucceeded() {
+    this.createNewElement = null;
+  }
 }

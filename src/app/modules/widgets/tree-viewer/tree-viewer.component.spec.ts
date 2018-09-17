@@ -7,6 +7,7 @@ import { DebugElement } from '@angular/core';
 import { DeleteAction } from './confirmation-needing-action';
 import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
 import { MessagingModule } from '@testeditor/messaging-service';
+import { NewElementComponent } from './new-element/new-element.component';
 
 describe('TreeViewerComponent', () => {
   let component: TreeViewerComponent;
@@ -45,7 +46,7 @@ describe('TreeViewerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ MessagingModule.forRoot() ],
-      declarations: [ TreeViewerComponent ]
+      declarations: [ TreeViewerComponent, NewElementComponent ]
     })
     .compileComponents();
   }));
