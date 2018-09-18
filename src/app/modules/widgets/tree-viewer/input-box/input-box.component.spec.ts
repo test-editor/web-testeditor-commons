@@ -8,7 +8,11 @@ import { TreeViewerInputBoxConfig, InputBoxConfig } from '../../../event-types-i
 
 @Component({
   selector: `app-host-component`,
-  template: `<app-input-box [value]="value" [config]="config" (cancelled)="onCancelled()" (succeeded)="onSucceeded()"></app-input-box>`
+  template: `<app-tree-input-box [value]="value"
+                                 [config]="config"
+                                 (cancelled)="onCancelled()"
+                                 (succeeded)="onSucceeded()">
+             </app-tree-input-box>`
 })
 class TestHostComponent {
   public config: InputBoxConfig | TreeViewerInputBoxConfig = {

@@ -21,11 +21,11 @@
           (dblclick)="onTextDoubleClick(model, $event)"
         >{{model.name}}</span>
         <ng-template #rename>
-          <app-input-box
+          <app-tree-input-box
             (cancelled)="onRenameCancelled()"
             (succeeded)="onRenameSucceeded()"
             [config]="renameElement"
-            [value]="model.name"></app-input-box>
+            [value]="model.name"></app-tree-input-box>
         </ng-template>
 
       </div>
@@ -46,7 +46,7 @@
     </div>
   </div>
   <div *ngIf="createNewElement" [style.padding-left]="level * 12 + 'px'">
-    <app-input-box (cancelled)="onNewElementCancelled()" (succeeded)="onNewElementSucceeded()" [config]="createNewElement"></app-input-box>
+    <app-tree-input-box (cancelled)="onNewElementCancelled()" (succeeded)="onNewElementSucceeded()" [config]="createNewElement"></app-tree-input-box>
   </div>
   <div *ngIf="model.expanded">
     <div *ngFor="let child of model.children">

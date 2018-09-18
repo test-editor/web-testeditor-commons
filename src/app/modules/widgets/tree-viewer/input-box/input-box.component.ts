@@ -6,14 +6,14 @@ export enum ContextType { Parent, Sibling }
 export interface NodeContext { node: TreeNode; type: ContextType; }
 
 @Component({
-  selector: 'app-input-box',
+  selector: 'app-tree-input-box',
   templateUrl: './input-box.component.html',
   styleUrls: ['./input-box.component.css']
 })
 export class InputBoxComponent implements AfterViewInit {
 
   @ViewChild('theInput') input: ElementRef;
-  @Input() config: InputBoxConfig | TreeViewerInputBoxConfig;
+  @Input() config: InputBoxConfig;
   @Input() value: string;
   @Output() cancelled = new EventEmitter<void>();
   @Output() succeeded = new EventEmitter<void>();
