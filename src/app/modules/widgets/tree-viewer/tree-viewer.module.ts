@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TreeViewerComponent } from './tree-viewer.component';
-import { NewElementComponent } from './new-element/new-element.component';
+import { InputBoxComponent } from './input-box/input-box.component';
 
 @NgModule({
   imports: [
@@ -9,7 +9,7 @@ import { NewElementComponent } from './new-element/new-element.component';
   ],
   declarations: [
     TreeViewerComponent,
-    NewElementComponent
+    InputBoxComponent
   ],
   exports: [
     TreeViewerComponent

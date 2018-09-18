@@ -1,27 +1,32 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
-import { NewElementComponent, ContextType } from './new-element.component';
+import { InputBoxComponent } from './input-box.component';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { NewElementConfig } from '../../../event-types-in';
+import { TreeViewerInputBoxConfig, InputBoxConfig } from '../../../event-types-in';
 
 
 @Component({
   selector: `app-host-component`,
-  template: `<app-new-element [config]="config" (cancelled)="onCancelled()" (succeeded)="onSucceeded()"></app-new-element>`
+  template: `<app-tree-input-box [value]="value"
+                                 [config]="config"
+                                 (cancelled)="onCancelled()"
+                                 (succeeded)="onSucceeded()">
+             </app-tree-input-box>`
 })
 class TestHostComponent {
-  public config: NewElementConfig = {
-    createNewElement: null,
+  public config: InputBoxConfig | TreeViewerInputBoxConfig = {
+    onConfirm: null,
     iconCssClasses: '',
     indent: false,
     validateName: null
   };
+  public value: string = undefined;
   public cancelCounter = 0;
   public successCounter = 0;
 
-  @ViewChild(NewElementComponent)
-  public newElementComponentUnderTest: NewElementComponent;
+  @ViewChild(InputBoxComponent)
+  public inputBoxComponentUnderTest: InputBoxComponent;
 
   onCancelled() {
     this.cancelCounter++;
@@ -32,13 +37,13 @@ class TestHostComponent {
   }
 }
 
-describe('NewElementComponent', () => {
+describe('InputBoxComponent', () => {
   let hostComponent: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TestHostComponent, NewElementComponent ]
+      declarations: [ TestHostComponent, InputBoxComponent ]
     })
     .compileComponents();
   }));
@@ -50,12 +55,12 @@ describe('NewElementComponent', () => {
   });
 
   it('should create', () => {
-    expect(hostComponent.newElementComponentUnderTest).toBeTruthy();
+    expect(hostComponent.inputBoxComponentUnderTest).toBeTruthy();
   });
 
   it('should emit cancel event when ESC is pressed', () => {
     // given
-    const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
 
     // when
     inputField.triggerEventHandler('keyup.escape', {});
@@ -68,7 +73,7 @@ describe('NewElementComponent', () => {
     // given
     let nameToValidate = '';
     hostComponent.config.validateName = (name) => { nameToValidate = name; return { valid: true }; };
-    const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
 
@@ -86,7 +91,7 @@ describe('NewElementComponent', () => {
     // given
     let nameToValidate = '';
     hostComponent.config.validateName = (name) => { nameToValidate = name; return { valid: false, message: 'invalid name!' }; };
-    const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
 
@@ -102,12 +107,12 @@ describe('NewElementComponent', () => {
     expect(inputField.classes['input-error']).toBeTruthy('input field should contain "input-error" css class.');
   }));
 
-  it('should call "createNewElement" callback when enter key is pressed and the input is valid', fakeAsync(() => {
+  it('should call "onConfirm" callback when enter key is pressed and the input is valid', fakeAsync(() => {
     // given
     let actualName = '';
     hostComponent.config.validateName = () => ({ valid: true });
-    hostComponent.config.createNewElement = (name) => { actualName = name; return true; };
-    const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
+    hostComponent.config.onConfirm = (name) => { actualName = name; return Promise.resolve(true); };
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
 
@@ -121,12 +126,12 @@ describe('NewElementComponent', () => {
     expect(actualName).toEqual('Hello, World');
   }));
 
-  it('should not call "createNewElement" callback when enter key is pressed and the input is invalid', fakeAsync(() => {
+  it('should not call "onConfirm" callback when enter key is pressed and the input is invalid', fakeAsync(() => {
     // given
     let createNewElementWasCalled = false;
     hostComponent.config.validateName = () => ({ valid: false, message: 'invalid input!' });
-    hostComponent.config.createNewElement = () => { createNewElementWasCalled = true; return true; };
-    const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
+    hostComponent.config.onConfirm = () => { createNewElementWasCalled = true; return Promise.resolve(true); };
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
 
@@ -143,11 +148,11 @@ describe('NewElementComponent', () => {
     expect(inputField.classes['input-error']).toBeTruthy('input field should contain "input-error" css class.');
   }));
 
-  it('should emit "succeeded" event when pressing enter and "createNewElement" returns true', fakeAsync(() => {
+  it('should emit "succeeded" event when pressing enter and "onConfirm" returns true', fakeAsync(() => {
     // given
     hostComponent.config.validateName = () => ({ valid: true });
-    hostComponent.config.createNewElement = () => true;
-    const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
+    hostComponent.config.onConfirm = () => Promise.resolve(true);
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
 
@@ -161,11 +166,11 @@ describe('NewElementComponent', () => {
     expect(hostComponent.successCounter).toEqual(1);
   }));
 
-  it('must not emit "succeeded" event when pressing enter and "createNewElement" returns false', fakeAsync(() => {
+  it('must not emit "succeeded" event when pressing enter and "onConfirm" returns false', fakeAsync(() => {
     // given
     hostComponent.config.validateName = (name) => ({ valid: true });
-    hostComponent.config.createNewElement = (name) => false;
-    const inputField = fixture.debugElement.query(By.css('.navNewElement > input'));
+    hostComponent.config.onConfirm = (name) => Promise.resolve(false);
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
     inputField.nativeElement.value = 'Hello, World';
     inputField.nativeElement.dispatchEvent(new Event('input'));
 
@@ -178,7 +183,69 @@ describe('NewElementComponent', () => {
     expect(hostComponent.successCounter).toEqual(0);
     const errorField = fixture.debugElement.query(By.css('.alert'));
     expect(errorField).toBeTruthy('error field was not found');
-    expect(errorField.nativeElement.innerText).toEqual('Error while creating element!');
+    expect(errorField.nativeElement.innerText).toEqual('Action did not succeed.');
     expect(inputField.classes['input-error']).toBeTruthy('input field should contain "input-error" css class.');
   }));
+
+  it('leaves the input box empty if "value" is not set by the host component', () => {
+    // given
+    hostComponent.value = undefined;
+
+    // when
+    fixture.detectChanges();
+
+    // then
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input')).nativeElement;
+    expect(inputField.value).toEqual('');
+  });
+
+  it('sets the initial text of the input box to the value provided the host component', () => {
+    // given
+    hostComponent.value = 'initial value';
+
+    // when
+    fixture.detectChanges();
+
+    // then
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input')).nativeElement;
+    expect(inputField.value).toEqual('initial value');
+  });
+
+  it('shows an icon and sets indent when a TreeViewerInputBoxConfig is provided', () => {
+    // given
+    const config: TreeViewerInputBoxConfig = {
+      onConfirm: null,
+      iconCssClasses: 'anIconCssClass',
+      indent: true,
+      validateName: null
+    };
+
+    // when
+    hostComponent.config = config;
+    fixture.detectChanges();
+
+    // then
+    const navInputBox = fixture.debugElement.query(By.css('.navInputBox'));
+    const icon = fixture.debugElement.query(By.css('.navInputBox > span'));
+    expect(navInputBox.styles['padding-left']).toEqual('12px');
+    expect(icon.classes['anIconCssClass']).toBeTruthy();
+  });
+
+  it('shows no icon and sets indent to "0px" when a plain InputBoxConfig (w/o "indent" and "iconCssClasses" fields) is provided', () => {
+    // given
+    const config: InputBoxConfig = {
+      onConfirm: null,
+      validateName: null
+    };
+
+    // when
+    hostComponent.config = config;
+    fixture.detectChanges();
+
+    // then
+    const navInputBox = fixture.debugElement.query(By.css('.navInputBox'));
+    const icon = fixture.debugElement.query(By.css('.navInputBox > span'));
+    expect(navInputBox.styles['padding-left']).toEqual('0px');
+    expect(icon).toBeFalsy();
+  });
 });

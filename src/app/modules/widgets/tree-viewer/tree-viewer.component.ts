@@ -7,8 +7,7 @@ import { TreeNode } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
 import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
 import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
-import { ContextType } from './new-element/new-element.component';
-import { NewElementConfig, TREE_NODE_CREATE_AT_SELECTED } from '../../event-types-in';
+import { InputBoxConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED, TreeViewerInputBoxConfig } from '../../event-types-in';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -23,7 +22,8 @@ export class TreeViewerComponent implements OnInit {
   @Input() config: TreeViewerConfig;
 
   private selectionContextSubscriptions: Subscription;
-  createNewElement: NewElementConfig = null;
+  createNewElement: TreeViewerInputBoxConfig = null;
+  renameElement: InputBoxConfig = null;
 
   private embeddedButton: TreeViewerEmbeddedButton;
   private activeAction: ConfirmationNeedingAction = null;
@@ -56,10 +56,6 @@ export class TreeViewerComponent implements OnInit {
     }
   }
 
-  get isLeaf(): boolean {
-    return this.model.expanded === undefined;
-  }
-
   /** select this node, publish event that this node has been selected,
       register for selection events (react to selections of other nodes of the same tree and deselect) */
   public select(node: TreeNode): void {
@@ -87,6 +83,8 @@ export class TreeViewerComponent implements OnInit {
   private subscribeToEventsInSelectionContext() {
     this.selectionContextSubscriptions = this.messagingService.subscribe(TREE_NODE_CREATE_AT_SELECTED,
       (payload) => this.createNewElement = payload);
+    this.selectionContextSubscriptions.add(this.messagingService.subscribe(TREE_NODE_RENAME_SELECTED,
+      (payload) => this.renameElement = payload));
   }
 
   onClick(node: TreeNode) {
@@ -167,5 +165,13 @@ export class TreeViewerComponent implements OnInit {
   }
   onNewElementSucceeded() {
     this.createNewElement = null;
+  }
+
+  onRenameCancelled() {
+    this.renameElement = null;
+  }
+
+  onRenameSucceeded() {
+    this.renameElement = null;
   }
 }
