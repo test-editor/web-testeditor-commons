@@ -1,5 +1,6 @@
 import { TreeNode } from './tree-node';
 import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
+import { Field } from './markers/field';
 
 export interface TreeViewerConfig {
   onClick?: (node: TreeNode) => void;
@@ -8,4 +9,5 @@ export interface TreeViewerConfig {
   onTextClick?: (node: TreeNode) => void;
   onTextDoubleClick?: (node: TreeNode) => void;
   embeddedButton?: (node: TreeNode) => TreeViewerEmbeddedButton;
+  indicatorFields?: Field[];
 }

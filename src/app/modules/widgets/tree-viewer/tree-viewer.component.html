@@ -1,40 +1,36 @@
 <div class="tree-view" *ngIf="model" [ngClass]="cssClasses">
   <div class="tree-view-item">
-    <div
-      class="tree-view-item-key"
-      (click)="onClick(model)"
-      (dblclick)="onDoubleClick(model)"
-      [style.padding-left]="level * 12 + 'px'"
+    <div class="tree-view-item-key" (click)="onClick(model)" (dblclick)="onDoubleClick(model)" [style.padding-left]="level * 12 + 'px'"
       [ngClass]="{
       'active': model.active,
       'header': level == 0,
       'selected': model.selected
-      }"
-    >
+      }">
       <div class="tree-view-element">
         <span class="icon-type fa" [ngClass]="icon" (click)="onIconClick(model, $event)">
         </span>
-        <span
-          *ngIf="!renameElement; else rename"
-          title="{{model.hover}}"
-          (click)="onTextClick(model, $event)"
-          (dblclick)="onTextDoubleClick(model, $event)"
-        >{{model.name}}</span>
+        <span *ngIf="!renameElement; else rename" title="{{model.hover}}" (click)="onTextClick(model, $event)" (dblclick)="onTextDoubleClick(model, $event)">{{model.name}}</span>
         <ng-template #rename>
-          <app-tree-input-box
-            (cancelled)="onRenameCancelled()"
-            (succeeded)="onRenameSucceeded()"
-            [config]="renameElement"
-            [value]="model.name"></app-tree-input-box>
+          <app-tree-input-box (cancelled)="onRenameCancelled()" (succeeded)="onRenameSucceeded()" [config]="renameElement" [value]="model.name"></app-tree-input-box>
         </ng-template>
 
       </div>
 
-      <div>
-        <span *ngIf="showEmbeddedButton()"
-          [title]="embeddedButton.hoverText(model)"
-          class="embedded-button" [ngClass]="embeddedButtonClasses"
-          (click)="onEmbeddedButtonClick()"></span>
+      <div class="indicator-boxes">
+        <ng-container *ngIf="config && config.indicatorFields">
+          <div *ngFor="let field of config.indicatorFields">
+            <ng-container *ngIf="field.condition(model) else emptyBox">
+              <app-indicator-box [model]="{'node': model, 'possibleStates': field.states}"></app-indicator-box>
+            </ng-container>
+          </div>
+        </ng-container>
+        <div>
+          <span *ngIf="showEmbeddedButton() else emptyBox"
+            [title]="embeddedButton.hoverText(model)"
+            class="embedded-button fa-fw"
+            [ngClass]="embeddedButtonClasses"
+            (click)="onEmbeddedButtonClick()"></span>
+        </div>
       </div>
 
     </div>
@@ -54,3 +50,7 @@
     </div>
   </div>
 </div>
+
+<ng-template #emptyBox>
+    <div class="fa fa-fw"></div>
+</ng-template>

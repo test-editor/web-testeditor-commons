@@ -1,3 +1,5 @@
+import { TreeNode } from '../tree-node';
+
 /**
  * Represents the state a marker field can assume based on a marker.
  *
@@ -7,7 +9,7 @@
  * to the workspace element for which a field should be displayed.
  */
 export class MarkerState {
-  condition: (marker: any) => boolean;
+  condition: (node: TreeNode) => boolean;
   cssClasses: string;
-  label: (marker: any) => string;
+  label: (node: TreeNode) => string;
 }

@@ -11,13 +11,13 @@ describe('IndicatorBoxComponent', () => {
   let fixture: ComponentFixture<TestHostComponent>;
 
   const sampleMarkerStates: MarkerState[] = [{
-      condition: (marker) => marker.sampleField && marker.otherField === 'test',
+      condition: (node) => node.marker.sampleField && node.marker.otherField === 'test',
       cssClasses: 'someClass',
-      label: (marker) => `sampleField = ${marker.sampleField}`,
+      label: (node) => `sampleField = ${node.marker.sampleField}`,
     }, {
-      condition: (marker) => !marker.sampleField,
+      condition: (node) => !node.marker.sampleField,
       cssClasses: 'otherClass',
-      label: (marker) => `otherField = ${marker.otherField}`,
+      label: (node) => `otherField = ${node.marker.otherField}`,
   }];
 
   @Component({
@@ -105,9 +105,9 @@ describe('IndicatorBoxComponent', () => {
     hostComponent.node = {children: [], name: 'sampleNode', root: null, marker: marker };
     hostComponent.states = sampleMarkerStates.slice(0);
     hostComponent.states.unshift({
-      condition: (marker_) => marker_.nonExisting.property === true,
+      condition: (node) => node.marker.nonExisting.property === true,
       cssClasses: 'brokenStateClass',
-      label: (marker_) => { throw new Error('broken label provider'); },
+      label: () => { throw new Error('broken label provider'); },
     });
 
     // when
@@ -126,9 +126,9 @@ describe('IndicatorBoxComponent', () => {
     hostComponent.node = {children: [], name: 'sampleNode', root: null, marker: marker };
     hostComponent.states = sampleMarkerStates.slice(0);
     hostComponent.states.unshift({
-      condition: (marker_) => marker_.nonExisting.property === true,
+      condition: (node) => node.marker.nonExisting.property === true,
       cssClasses: 'brokenStateClass',
-      label: (marker_) => { throw new Error('broken label provider'); },
+      label: () => { throw new Error('broken label provider'); },
     });
 
     // when

@@ -21,7 +21,7 @@
   width: 100%;
 }
 
-.tree-view-item-key {
+.tree-view-item-key, .indicator-boxes {
   display: flex;
   justify-content: space-between;
 }
@@ -67,7 +67,6 @@
 }
 
 .embedded-button {
-  font-size: 12px;
   right: 5px;
   visibility: hidden;
 }
