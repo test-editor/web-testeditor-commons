@@ -17,7 +17,11 @@
     <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
   </li>
 </ul>
+<div>
 <button (click)="createNewFile()">New File</button>
 <button (click)="createNewFolder()">New Folder</button>
-<button (click)="rename()">Rename</button>
+<button (click)="rename()">Rename</button>| Cycle through indicator states:
+<button (click)="nextState(0)">Indicator 1</button>
+<button (click)="nextState(1)">Indicator 2</button>
+</div>
 <app-tree-viewer [model]="model" [level]="0" [config]="treeConfig"></app-tree-viewer>

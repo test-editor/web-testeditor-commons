@@ -32,6 +32,7 @@ export class AppComponent {
   };
 
   selectedNode: TreeNode = null;
+  indicatorFieldState = [0, 0];
 
   treeConfig: TreeViewerConfig = {
     onDoubleClick: (node: TreeNode) => node.cssClasses = 'hidden',
@@ -39,6 +40,30 @@ export class AppComponent {
     onClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
     embeddedButton: (node: TreeNode) => new EmbeddedDeleteButton(
       new DeleteAction(node, (_node) => console.log(`Clicked delete button of node '${_node.name}'`))),
+    indicatorFields: [
+      {
+        condition: () => true,
+        states: [{
+            condition: () => this.indicatorFieldState[0] % 2 === 0,
+            cssClasses: 'fa fa-font-awesome',
+            label: (node: TreeNode) => `Font Awesome Logo displayed for ${node.name}`
+          }, {
+            condition: () => this.indicatorFieldState[0] % 2 === 1,
+            cssClasses: 'fa fa-fort-awesome',
+            label: (node: TreeNode) => `Fort Awesome Logo displayed for ${node.name}`
+          }
+        ]
+      },
+      {
+        condition: () => this.indicatorFieldState[1] % 5 !== 0,
+        states: [
+          { condition: () => this.indicatorFieldState[1] % 5 === 1, cssClasses: 'fa fas fa-chevron-right', label: () => 'one' },
+          { condition: () => this.indicatorFieldState[1] % 5 === 2, cssClasses: 'fa fas fa-chevron-down', label: () => 'two' },
+          { condition: () => this.indicatorFieldState[1] % 5 === 3, cssClasses: 'fa fas fa-chevron-left', label: () => 'three' },
+          { condition: () => this.indicatorFieldState[1] % 5 === 4, cssClasses: 'fa fas fa-chevron-up', label: () => 'four' }
+        ]
+      }
+    ]
   };
 
   constructor(private messageBus: MessagingService) {
@@ -90,5 +115,9 @@ export class AppComponent {
       };
       this.messageBus.publish(TREE_NODE_RENAME_SELECTED, payload);
     }
+  }
+
+  nextState(fieldIndex: number) {
+    this.indicatorFieldState[fieldIndex]++;
   }
 }
