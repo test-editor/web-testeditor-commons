@@ -10,14 +10,18 @@ describe('IndicatorBoxComponent', () => {
   let hostComponent: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
 
+  interface TreeNodeWithMarker extends TreeNode {
+    marker?: any;
+  }
+
   const sampleMarkerStates: MarkerState[] = [{
-      condition: (node) => node.marker.sampleField && node.marker.otherField === 'test',
+      condition: (node: TreeNodeWithMarker) => node.marker.sampleField && node.marker.otherField === 'test',
       cssClasses: 'someClass',
-      label: (node) => `sampleField = ${node.marker.sampleField}`,
+      label: (node: TreeNodeWithMarker) => `sampleField = ${node.marker.sampleField}`,
     }, {
-      condition: (node) => !node.marker.sampleField,
+      condition: (node: TreeNodeWithMarker) => !node.marker.sampleField,
       cssClasses: 'otherClass',
-      label: (node) => `otherField = ${node.marker.otherField}`,
+      label: (node: TreeNodeWithMarker) => `otherField = ${node.marker.otherField}`,
   }];
 
   @Component({
@@ -28,7 +32,7 @@ describe('IndicatorBoxComponent', () => {
     @ViewChild(IndicatorBoxComponent)
     public indicatorBoxComponentUnderTest: IndicatorBoxComponent;
 
-    node: TreeNode;
+    node: TreeNodeWithMarker;
     states: MarkerState[];
   }
 
@@ -105,7 +109,7 @@ describe('IndicatorBoxComponent', () => {
     hostComponent.node = {children: [], name: 'sampleNode', root: null, marker: marker };
     hostComponent.states = sampleMarkerStates.slice(0);
     hostComponent.states.unshift({
-      condition: (node) => node.marker.nonExisting.property === true,
+      condition: (node: TreeNodeWithMarker) => node.marker.nonExisting.property === true,
       cssClasses: 'brokenStateClass',
       label: () => { throw new Error('broken label provider'); },
     });
@@ -126,7 +130,7 @@ describe('IndicatorBoxComponent', () => {
     hostComponent.node = {children: [], name: 'sampleNode', root: null, marker: marker };
     hostComponent.states = sampleMarkerStates.slice(0);
     hostComponent.states.unshift({
-      condition: (node) => node.marker.nonExisting.property === true,
+      condition: (node: TreeNodeWithMarker) => node.marker.nonExisting.property === true,
       cssClasses: 'brokenStateClass',
       label: () => { throw new Error('broken label provider'); },
     });

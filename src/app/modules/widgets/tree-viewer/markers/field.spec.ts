@@ -6,13 +6,13 @@ describe('Field', () => {
     const testField: Field = {
       condition: (element) => element != null,
       states: [{
-        condition: (node) => node.marker.someAttribute,
-        cssClasses: 'someClass',
-        label: () => 'some',
+        condition: (node) => node.root === null,
+        cssClasses: 'rootCssClass',
+        label: () => 'I am root!',
       }, {
-        condition: (node) => !node.marker.someAttribute,
-        cssClasses: 'otherClass',
-        label: () => 'other',
+        condition: (node) => node.root !== null,
+        cssClasses: 'treeCssClass',
+        label: () => 'I am not root.',
       }]
     };
     expect(testField).toBeTruthy();

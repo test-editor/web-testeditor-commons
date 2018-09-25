@@ -4,11 +4,11 @@ import { TreeNode } from '../tree-node';
 describe('MarkerState', () => {
 
   let sampleMarkerState: MarkerState;
-  const sampleAttributeValue = 42;
+  const sampleName = 'sampleName';
 
   beforeEach(() => {
     sampleMarkerState = {
-      condition: (node) => node.marker.someAttribute === sampleAttributeValue,
+      condition: (node) => node.name === sampleName,
       cssClasses: 'someCssClass',
       label: () => 'The label',
     };
@@ -16,7 +16,7 @@ describe('MarkerState', () => {
 
   it('conditions can be invoked', () => {
     // given
-    const node: TreeNode = { name: '', children: [], root: null, marker: { someAttribute: sampleAttributeValue } };
+    const node: TreeNode = { name: sampleName, children: [], root: null };
 
     // when
     const actualResult = sampleMarkerState.condition(node);
@@ -32,12 +32,12 @@ describe('MarkerState', () => {
       cssClasses: '',
       label: (node_) => `label for ${node_.name}`,
     };
-    const node: TreeNode = { name: 'the node', children: [], root: null, marker: { someAttribute: sampleAttributeValue } };
+    const node: TreeNode = { name: sampleName, children: [], root: null };
 
     // when
     const actualLabel = markerState.label(node);
 
     // then
-    expect(actualLabel).toEqual('label for the node');
+    expect(actualLabel).toEqual('label for sampleName');
   });
 });
