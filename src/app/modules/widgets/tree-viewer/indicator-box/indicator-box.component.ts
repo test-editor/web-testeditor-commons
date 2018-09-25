@@ -24,14 +24,10 @@ export class IndicatorBoxComponent {
     if (this.isInitialized()) {
       const activeState = this.getActiveState();
       if (activeState) {
-        return activeState.label(this.getMarker());
+        return activeState.label(this.model.node);
       }
     }
     return '';
-  }
-
-  private getMarker(): any {
-    return this.model.node.marker;
   }
 
   private isInitialized(): boolean {
@@ -41,7 +37,7 @@ export class IndicatorBoxComponent {
   private getActiveState(): MarkerState {
     return this.model.possibleStates.find((state) => {
       try {
-        return state.condition(this.getMarker());
+        return state.condition(this.model.node);
       } catch (error) {
         console.log(error);
         return false;

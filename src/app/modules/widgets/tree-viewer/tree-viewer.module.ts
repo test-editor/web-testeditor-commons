@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { TreeViewerComponent } from './tree-viewer.component';
 import { InputBoxComponent } from './input-box/input-box.component';
 import { IndicatorBoxComponent } from './indicator-box/indicator-box.component';
+import { MessagingModule } from '@testeditor/messaging-service';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule, MessagingModule.forRoot()
   ],
   declarations: [
     TreeViewerComponent,

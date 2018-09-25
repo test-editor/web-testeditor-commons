@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
 import { InputBoxConfig, TreeViewerInputBoxConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED } from '../../event-types-in';
 import { DeleteAction } from './confirmation-needing-action';
+import { IndicatorBoxComponent } from './indicator-box/indicator-box.component';
 import { InputBoxComponent } from './input-box/input-box.component';
 import { forEach, TreeNode } from './tree-node';
 import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
@@ -47,7 +48,7 @@ describe('TreeViewerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ MessagingModule.forRoot() ],
-      declarations: [ TreeViewerComponent, InputBoxComponent ]
+      declarations: [ TreeViewerComponent, InputBoxComponent, IndicatorBoxComponent ]
     })
     .compileComponents();
   }));
@@ -582,4 +583,60 @@ describe('TreeViewerComponent', () => {
     // then
     expect(fixture.debugElement.query(By.css('.navRenameElement'))).toBeFalsy();
   }));
+
+  it('provides an indicator box for fields whose display condition is satisfied', () => {
+    // given
+    component.model = singleEmptyTreeNode();
+
+    // when
+    component.config = { indicatorFields: [{
+      condition: () => true, states: [{condition: () => true, cssClasses: 'testCssClass', label: () => 'testLabel'}]
+    }] };
+    fixture.detectChanges();
+
+    // then
+    const indicatorBox = fixture.debugElement.query(By.css('.indicator-boxes .testCssClass'));
+    expect(indicatorBox).toBeTruthy();
+    expect(indicatorBox.nativeElement.title).toEqual('testLabel');
+  });
+
+  it('hides the indicator box but reserves the space for fields whose display condition is not satisfied', () => {
+    // given
+    component.model = singleEmptyTreeNode();
+
+    // when
+    component.config = { indicatorFields: [{
+      condition: () => false, states: []
+    }] };
+    fixture.detectChanges();
+
+    // then
+    expect(fixture.debugElement.query(By.css('.indicator-boxes .testCssClass'))).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('.indicator-boxes .fa-fw'))).toBeTruthy();
+  });
+
+  it('provides indicator boxes for each field whose display condition is satisfied', () => {
+    // given
+    component.model = singleEmptyTreeNode();
+
+    // when
+    component.config = { indicatorFields: [{
+      condition: () => true, states: [{condition: () => true, cssClasses: 'testCssClass', label: () => 'testLabel'}]
+    }, {
+      condition: () => false, states: [{condition: () => true, cssClasses: 'notPresentCssClass', label: () => 'notShown'}]
+    }, {
+      condition: () => true, states: [{condition: () => true, cssClasses: 'anotherCssClass', label: () => 'anotherLabel'}]
+    }, ] };
+    fixture.detectChanges();
+
+    // then
+    const indicatorBox1 = fixture.debugElement.query(By.css('.indicator-boxes .testCssClass'));
+    const indicatorBox2 = fixture.debugElement.query(By.css('.indicator-boxes .notPresentCssClass'));
+    const indicatorBox3 = fixture.debugElement.query(By.css('.indicator-boxes .anotherCssClass'));
+    expect(indicatorBox1).toBeTruthy();
+    expect(indicatorBox1.nativeElement.title).toEqual('testLabel');
+    expect(indicatorBox2).toBeFalsy();
+    expect(indicatorBox3).toBeTruthy();
+    expect(indicatorBox3.nativeElement.title).toEqual('anotherLabel');
+  });
 });
