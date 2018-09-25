@@ -622,12 +622,21 @@ describe('TreeViewerComponent', () => {
     // when
     component.config = { indicatorFields: [{
       condition: () => true, states: [{condition: () => true, cssClasses: 'testCssClass', label: () => 'testLabel'}]
-    }] };
+    }, {
+      condition: () => false, states: [{condition: () => true, cssClasses: 'notPresentCssClass', label: () => 'notShown'}]
+    }, {
+      condition: () => true, states: [{condition: () => true, cssClasses: 'anotherCssClass', label: () => 'anotherLabel'}]
+    }, ] };
     fixture.detectChanges();
 
     // then
-    const indicatorBox = fixture.debugElement.query(By.css('.indicator-boxes .testCssClass'));
-    expect(indicatorBox).toBeTruthy();
-    expect(indicatorBox.nativeElement.title).toEqual('testLabel');
+    const indicatorBox1 = fixture.debugElement.query(By.css('.indicator-boxes .testCssClass'));
+    const indicatorBox2 = fixture.debugElement.query(By.css('.indicator-boxes .notPresentCssClass'));
+    const indicatorBox3 = fixture.debugElement.query(By.css('.indicator-boxes .anotherCssClass'));
+    expect(indicatorBox1).toBeTruthy();
+    expect(indicatorBox1.nativeElement.title).toEqual('testLabel');
+    expect(indicatorBox2).toBeFalsy();
+    expect(indicatorBox3).toBeTruthy();
+    expect(indicatorBox3.nativeElement.title).toEqual('anotherLabel');
   });
 });
