@@ -78,3 +78,7 @@
 .hidden {
   display: none;
 }
+
+.collapsed-subtree {
+  display: none;
+}

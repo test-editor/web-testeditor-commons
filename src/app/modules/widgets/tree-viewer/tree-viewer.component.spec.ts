@@ -77,10 +77,8 @@ describe('TreeViewerComponent', () => {
     tick();
 
     // then
-    const treeview = fixture.debugElement.query(By.css('.tree-view'));
-    const treeitems = treeview.queryAll(By.css('.tree-view-item-key'));
-    expect(treeitems.length).toEqual(1);
-    expect(treeitems[0].nativeElement.innerText).toContain('parent node');
+    const hiddenSubtree = fixture.debugElement.query(By.css('.tree-view > .collapsed-subtree'));
+    expect(hiddenSubtree).toBeTruthy();
   }));
 
   it('shows sub elements of expanded noded', fakeAsync(() => {
