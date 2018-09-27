@@ -44,7 +44,7 @@
   <div *ngIf="createNewElement" [style.padding-left]="level * 12 + 'px'">
     <app-tree-input-box (cancelled)="onNewElementCancelled()" (succeeded)="onNewElementSucceeded()" [config]="createNewElement"></app-tree-input-box>
   </div>
-  <div *ngIf="model.expanded">
+  <div [ngClass]="{'collapsed-subtree': (model && !model.expanded)}">
     <div *ngFor="let child of model.children">
       <app-tree-viewer [model]="child" [level]="level + 1" [config]="config"></app-tree-viewer>
     </div>
