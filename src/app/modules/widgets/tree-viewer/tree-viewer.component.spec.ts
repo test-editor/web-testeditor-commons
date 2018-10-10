@@ -463,6 +463,7 @@ describe('TreeViewerComponent', () => {
     // given
     component.model = singleEmptyTreeNode();
     const newElementRequest: TreeViewerInputBoxConfig = {
+      root: component.model.root,
       onConfirm: () => Promise.resolve(true),
       iconCssClasses: 'testCssClass',
       indent: false,
@@ -484,6 +485,7 @@ describe('TreeViewerComponent', () => {
     // given
     component.model = singleEmptyTreeNode();
     const newElementRequest: TreeViewerInputBoxConfig = {
+      root: component.model.root,
       onConfirm: () => Promise.resolve(true),
       iconCssClasses: 'testCssClass',
       indent: false,
@@ -506,6 +508,7 @@ describe('TreeViewerComponent', () => {
     // given
     component.model = singleEmptyTreeNode();
     const newElementRequest: TreeViewerInputBoxConfig = {
+      root: component.model.root,
       onConfirm: () => Promise.resolve(true),
       iconCssClasses: 'testCssClass',
       indent: false,
@@ -528,6 +531,7 @@ describe('TreeViewerComponent', () => {
     // given
     component.model = singleEmptyTreeNode();
     const renameRequest: InputBoxConfig = {
+      root: component.model.root,
       onConfirm: () => Promise.resolve(true),
       validateName: () => ({ valid: false })
     };
@@ -547,6 +551,7 @@ describe('TreeViewerComponent', () => {
     // given
     component.model = singleEmptyTreeNode();
     const renameRequest: InputBoxConfig = {
+      root: component.model.root,
       onConfirm: () => Promise.resolve(true),
       validateName: () => ({ valid: false })
     };
@@ -567,6 +572,7 @@ describe('TreeViewerComponent', () => {
     // given
     component.model = singleEmptyTreeNode();
     const renameRequest: InputBoxConfig = {
+      root: component.model.root,
       onConfirm: () => Promise.resolve(true),
       validateName: () => ({ valid: false })
     };

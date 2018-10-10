@@ -16,6 +16,7 @@ import { TreeViewerInputBoxConfig, InputBoxConfig } from '../../../event-types-i
 })
 class TestHostComponent {
   public config: InputBoxConfig | TreeViewerInputBoxConfig = {
+    root: null,
     onConfirm: null,
     iconCssClasses: '',
     indent: false,
@@ -214,6 +215,7 @@ describe('InputBoxComponent', () => {
   it('shows an icon and sets indent when a TreeViewerInputBoxConfig is provided', () => {
     // given
     const config: TreeViewerInputBoxConfig = {
+      root: null,
       onConfirm: null,
       iconCssClasses: 'anIconCssClass',
       indent: true,
@@ -234,6 +236,7 @@ describe('InputBoxComponent', () => {
   it('shows no icon and sets indent to "0px" when a plain InputBoxConfig (w/o "indent" and "iconCssClasses" fields) is provided', () => {
     // given
     const config: InputBoxConfig = {
+      root: null,
       onConfirm: null,
       validateName: null
     };
