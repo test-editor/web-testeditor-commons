@@ -81,10 +81,22 @@ export class TreeViewerComponent implements OnInit {
   }
 
   private subscribeToEventsInSelectionContext() {
-    this.selectionContextSubscriptions = this.messagingService.subscribe(TREE_NODE_CREATE_AT_SELECTED,
-      (payload) => this.createNewElement = payload);
-    this.selectionContextSubscriptions.add(this.messagingService.subscribe(TREE_NODE_RENAME_SELECTED,
-      (payload) => this.renameElement = payload));
+    this.selectionContextSubscriptions =
+      this.messagingService.subscribe(
+        TREE_NODE_CREATE_AT_SELECTED,
+        (payload) => {
+          if (this.model.root === payload.root) {
+            this.createNewElement = payload;
+          }
+        });
+    this.selectionContextSubscriptions.add(
+      this.messagingService.subscribe(
+        TREE_NODE_RENAME_SELECTED,
+        (payload) => {
+          if (this.model.root === payload.root) {
+            this.renameElement = payload;
+          }
+        }));
   }
 
   onClick(node: TreeNode) {

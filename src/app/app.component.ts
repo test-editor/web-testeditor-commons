@@ -74,6 +74,7 @@ export class AppComponent {
   createNewFile() {
     if (this.selectedNode) {
       const payload: TreeViewerInputBoxConfig = {
+        root: this.model.root,
         onConfirm: (name) => {
           const contextTypeString = this.selectedNode.expanded !== undefined ? 'child' : 'sibling';
           console.log(`Create file with name '${name}' as a ${contextTypeString} of '${this.selectedNode.name}'`);
@@ -90,6 +91,7 @@ export class AppComponent {
   createNewFolder() {
     if (this.selectedNode) {
       const payload: TreeViewerInputBoxConfig = {
+        root: this.model.root,
         onConfirm: (name) => {
           const contextTypeString = this.selectedNode.expanded !== undefined ? 'child' : 'sibling';
           console.log(`Create folder with name '${name}' as a ${contextTypeString} of '${this.selectedNode.name}'`);
@@ -106,6 +108,7 @@ export class AppComponent {
   rename() {
     if (this.selectedNode) {
       const payload: InputBoxConfig = {
+        root: this.model.root,
         onConfirm: (name) => {
           console.log(`renaming '${this.selectedNode.name}' to '${name}'`);
           this.selectedNode.name = name;
