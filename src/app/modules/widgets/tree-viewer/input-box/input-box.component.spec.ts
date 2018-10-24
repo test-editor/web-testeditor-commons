@@ -251,4 +251,84 @@ describe('InputBoxComponent', () => {
     expect(navInputBox.styles['padding-left']).toEqual('0px');
     expect(icon).toBeFalsy();
   });
+
+  it('should call "onCancel" callback when ESC is pressed', () => {
+    // given
+    let onCancelWasCalled = false;
+    hostComponent.config.onCancel = () => {
+      onCancelWasCalled = true;
+      return Promise.resolve();
+    };
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
+
+    // when
+    inputField.triggerEventHandler('keyup.escape', {});
+
+    // then
+    expect(onCancelWasCalled).toBeTruthy();
+  });
+
+  it('should call "onCancel" callback when focus is lost ("blur" event)', () => {
+    // given
+    let onCancelWasCalled = false;
+    hostComponent.config.onCancel = () => {
+      onCancelWasCalled = true;
+      return Promise.resolve();
+    };
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
+
+    // when
+    inputField.nativeElement.dispatchEvent(new Event('blur'));
+
+    // then
+    expect(onCancelWasCalled).toBeTruthy();
+  });
+
+  it('should not try to call "onCancel" callback when none is provided', fakeAsync(() => {
+    // given
+    spyOn(console, 'error');
+    hostComponent.config.onCancel = undefined;
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
+
+    // when
+    try {
+      inputField.nativeElement.dispatchEvent(new Event('blur'));
+      tick();
+
+    // then
+      expect(console.error).not.toHaveBeenCalled();
+    } catch (error) {
+      fail(error);
+    }
+  }));
+
+  it('handles exceptions thrown in "onCancel" callback gracefully', fakeAsync(() => {
+    // given
+    spyOn(console, 'error');
+    const error = new Error('this is broken');
+    hostComponent.config.onCancel = () => { throw error; };
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
+
+    // when
+    inputField.nativeElement.dispatchEvent(new Event('blur'));
+    tick();
+
+    // then
+    expect(console.error).toHaveBeenCalledWith(error);
+  }));
+
+  it('handles promises rejected in "onCancel" callback gracefully', fakeAsync(() => {
+    // given
+    spyOn(console, 'error');
+    const error = new Error('this is broken');
+    hostComponent.config.onCancel = () => Promise.reject(error);
+    const inputField = fixture.debugElement.query(By.css('.navInputBox > input'));
+
+    // when
+    inputField.nativeElement.dispatchEvent(new Event('blur'));
+    tick();
+
+    // then
+    expect(console.error).toHaveBeenCalledWith(error);
+  }));
 });
