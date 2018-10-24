@@ -8,6 +8,7 @@ export interface InputBoxConfig {
   root: TreeNode;
   validateName: (newName: string) => { valid: boolean, message?: string };
   onConfirm: (newName: string) => Promise<boolean>;
+  onCancel?: () => Promise<void>;
 }
 export const TREE_NODE_RENAME_SELECTED = 'treenode.rename-selected';
 

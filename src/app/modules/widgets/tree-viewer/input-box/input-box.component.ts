@@ -58,8 +58,15 @@ export class InputBoxComponent implements AfterViewInit {
     }
   }
 
-  onCancel(): void {
+  async onCancel(): Promise<void> {
     this.cancelled.emit();
+    if (this.config && this.config.onCancel) {
+      try {
+        await this.config.onCancel();
+      } catch (reason) {
+        console.error(reason);
+      }
+    }
   }
 
 }
