@@ -1,8 +1,5 @@
 language: nix
 sudo: false
-# sudo: required
-#addons:
-#  chrome: stable
 cache:
   directories:
   - "$HOME/nix.store"

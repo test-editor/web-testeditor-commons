@@ -41,7 +41,5 @@ stdenv.mkDerivation {
         yarn install @angular/cli > /dev/null 2>&1
         # put all linked executables in node_modules on the path
         export PATH=`pwd`/node_modules/.bin:$PATH
-        # export CHROME_BIN=$(which google-chrome-stable)
-        # alias google-chrome=google-chrome-stable
     '';
 }
