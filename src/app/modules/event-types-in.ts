@@ -20,3 +20,5 @@ export interface TreeViewerInputBoxConfig extends InputBoxConfig {
   iconCssClasses: string;
 }
 export const TREE_NODE_CREATE_AT_SELECTED = 'treenode.create-at-selected';
+
+export const HTTP_CLIENT_SUPPLIED = 'httpClient.supplied';
