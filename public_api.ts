@@ -8,3 +8,4 @@ export * from './src/app/modules/event-types-in';
 export * from './src/app/modules/widgets/tree-viewer/tree-viewer-embedded-button';
 export * from './src/app/modules/widgets/tree-viewer/confirmation-needing-action';
 export * from './src/app/modules/widgets/tree-viewer/markers/field';
+export * from './src/app/modules/services/http-provider-service/http-provider.service';
