@@ -9,3 +9,5 @@ export * from './src/app/modules/widgets/tree-viewer/tree-viewer-embedded-button
 export * from './src/app/modules/widgets/tree-viewer/confirmation-needing-action';
 export * from './src/app/modules/widgets/tree-viewer/markers/field';
 export * from './src/app/modules/services/http-provider-service/http-provider.service';
+export * from './src/app/modules/utils/label-provider';
+export * from './src/app/modules/utils/style-provider';
