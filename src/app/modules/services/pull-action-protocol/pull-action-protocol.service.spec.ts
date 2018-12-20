@@ -46,9 +46,8 @@ describe('PullActionProtocol', () => {
     httpClient = TestBed.get(HttpClient);
     httpProviderService = TestBed.get(HttpProviderService);
 
-    const subscription = messagingService.subscribe('httpClient.needed', () => {
+    messagingService.subscribe('httpClient.needed', () => {
       messagingService.publish('httpClient.supplied', { httpClient: httpClient });
-    });
 
     repullResponseError = new HttpErrorResponse({ error: 'REPULL', status: HTTP_STATUS_CONFLICT });
 
