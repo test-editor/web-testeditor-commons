@@ -7,10 +7,17 @@ import { PullActionProtocol } from './pull-action-protocol.service';
 import { HttpProviderService } from '../http-provider-service/http-provider.service';
 
 export const HTTP_STATUS_CONFLICT = 409;
+
+
+/** generates an action that provides (potentially different) behaviour for each call
+
+    invocation count is the index into the passed array of answers, index going out of bounds restarts at the beginning
+    e.g. getActionsFor('a', true, new HttpErrorResonse(..))
+    will return the string 'a' on first invocation, boolean true on second and throws a HttpErrorResponse on third invocation */
 let actionCalledCount = 0;
 function  getActionsFor(...answers: any[]): (client: HttpClient) => Promise<Boolean> {
   actionCalledCount = 0;
-  return (client: HttpClient) => {
+  return (_) => {
     const idx = actionCalledCount % answers.length;
     actionCalledCount++;
     if (answers[idx] instanceof HttpErrorResponse) {
@@ -89,7 +96,7 @@ describe('PullActionProtocol', () => {
       expect(pullActionProtocol.executionPossible()).toBeFalsy();
     })));
 
-  it('executing pull and action reports error if diff happens in ciritcal file list',
+  it('executing pull and action reports error if diff happens in cirtical file list',
     fakeAsync(inject([HttpTestingController], (httpMock: HttpTestingController) => {
       // given
       const pullActionProtocol = new PullActionProtocol(httpProviderService, 'http://service-url',
@@ -99,7 +106,7 @@ describe('PullActionProtocol', () => {
       tick();
 
       // then
-      httpMock.match(pullMatcher)[0].flush({
+      httpMock.expectOne(pullMatcher).flush({
         failure: false, diffExists: false, headCommit: 'abcdef',
         changedResources: ['critical-file'],
         backedUpResources: []
@@ -111,7 +118,7 @@ describe('PullActionProtocol', () => {
       expect(pullActionProtocol.executionPossible()).toBeFalsy();
     })));
 
-  it('executing (pull and action) three times, succeeding on third call aggregates diffs in non critical files (removing duplicates)',
+  it('executes (pull and action) three times, succeeds on third call, and aggregates diffs in non-critical files (removing duplicates)',
     fakeAsync(inject([HttpTestingController], (httpMock: HttpTestingController) => {
       // given
       const pullActionProtocol = new PullActionProtocol(
