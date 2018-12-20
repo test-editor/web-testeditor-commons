@@ -48,6 +48,7 @@ describe('PullActionProtocol', () => {
 
     messagingService.subscribe('httpClient.needed', () => {
       messagingService.publish('httpClient.supplied', { httpClient: httpClient });
+    });
 
     repullResponseError = new HttpErrorResponse({ error: 'REPULL', status: HTTP_STATUS_CONFLICT });
 
