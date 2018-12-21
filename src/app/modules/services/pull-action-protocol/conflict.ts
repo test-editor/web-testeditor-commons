@@ -3,5 +3,5 @@ export class Conflict {
 }
 
 export function isConflict(conflict: Conflict | string): conflict is Conflict {
-  return (<Conflict>conflict).message !== undefined;
+  return (conflict !== null) && (<Conflict>conflict).message !== undefined;
 }
