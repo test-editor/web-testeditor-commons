@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MarkerState } from '../markers/marker.state';
-import { TreeNode } from '../tree-node';
+import { TreeNode, TreeNodeWithoutParentLinks } from '../tree-node';
 import { IndicatorBoxComponent } from './indicator-box.component';
 import { By } from '@angular/platform-browser';
 
@@ -10,8 +10,13 @@ describe('IndicatorBoxComponent', () => {
   let hostComponent: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
 
-  interface TreeNodeWithMarker extends TreeNode {
+  class TreeNodeWithMarker extends TreeNode {
     marker?: any;
+
+    constructor(baseTreeNode: TreeNodeWithoutParentLinks, marker: any = null, parent: TreeNode = null,) {
+        super(baseTreeNode, parent);
+        this.marker = marker;
+      }
   }
 
   const sampleMarkerStates: MarkerState[] = [{
@@ -58,7 +63,7 @@ describe('IndicatorBoxComponent', () => {
   it('sets the css classes of the active marker state and "fa-fw"', () => {
     // given
     const marker = {sampleField: true, otherField: 'test'};
-    hostComponent.node = {children: [], name: 'sampleNode', root: null, marker: marker };
+    hostComponent.node = new TreeNodeWithMarker({children: [], name: 'sampleNode'}, marker);
     hostComponent.states = sampleMarkerStates;
     fixture.detectChanges();
 
@@ -72,7 +77,7 @@ describe('IndicatorBoxComponent', () => {
   it('uses the active marker state`s label and css classes', () => {
     // given
     const marker = {sampleField: true, otherField: 'test'};
-    hostComponent.node = {children: [], name: 'sampleNode', root: null, marker: marker };
+    hostComponent.node = new TreeNodeWithMarker({children: [], name: 'sampleNode'}, marker);
     hostComponent.states = sampleMarkerStates;
 
     // when
@@ -87,7 +92,7 @@ describe('IndicatorBoxComponent', () => {
   it('changes label and css classes in accordance with changing marker states', () => {
     // given
     const marker = {sampleField: true, otherField: 'test'};
-    hostComponent.node = {children: [], name: 'sampleNode', root: null, marker: marker };
+    hostComponent.node = new TreeNodeWithMarker({children: [], name: 'sampleNode'}, marker);
     hostComponent.states = sampleMarkerStates;
     fixture.detectChanges();
     const indicatorBoxTag = fixture.debugElement.query(By.css('div'));
@@ -106,7 +111,7 @@ describe('IndicatorBoxComponent', () => {
   it('handles exceptions in condition expressions gracefully and allows other state to become active', () => {
     // given
     const marker = {sampleField: true, otherField: 'test'};
-    hostComponent.node = {children: [], name: 'sampleNode', root: null, marker: marker };
+    hostComponent.node = new TreeNodeWithMarker({children: [], name: 'sampleNode'}, marker);
     hostComponent.states = sampleMarkerStates.slice(0);
     hostComponent.states.unshift({
       condition: (node: TreeNodeWithMarker) => node.marker.nonExisting.property === true,
@@ -127,7 +132,7 @@ describe('IndicatorBoxComponent', () => {
     // given
     // given
     const marker = {sampleField: true, otherField: 'no state can become active now'};
-    hostComponent.node = {children: [], name: 'sampleNode', root: null, marker: marker };
+    hostComponent.node = new TreeNodeWithMarker({children: [], name: 'sampleNode'}, marker);
     hostComponent.states = sampleMarkerStates.slice(0);
     hostComponent.states.unshift({
       condition: (node: TreeNodeWithMarker) => node.marker.nonExisting.property === true,

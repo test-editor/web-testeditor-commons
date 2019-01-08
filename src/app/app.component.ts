@@ -18,16 +18,15 @@ export class AppComponent {
 
   model = new TreeNode({
     name: 'parent node',
-    root: null,
     collapsedCssClasses: 'fa-chevron-right',
     expandedCssClasses: 'fa-chevron-down',
     leafCssClasses: 'fa-folder',
     cssClasses: '',
     expanded: true,
     children: [
-      { name: 'child node 1', children: [], root: null, leafCssClasses: 'fa-file' },
-      { name: 'child node 2', children: [], root: null, leafCssClasses: 'fa-file' },
-      { name: 'child node 3', children: [], root: null, leafCssClasses: 'fa-file' }
+      { name: 'child node 1', children: [], leafCssClasses: 'fa-file' },
+      { name: 'child node 2', children: [], leafCssClasses: 'fa-file' },
+      { name: 'child node 3', children: [], leafCssClasses: 'fa-file' }
     ]
   });
 
@@ -68,7 +67,6 @@ export class AppComponent {
   };
 
   constructor(private messageBus: MessagingService) {
-    forEach(this.model, node => { node.root = this.model; });
     this.messageBus.subscribe(TREE_NODE_SELECTED, (selectedNode) => this.selectedNode = selectedNode);
   }
 
