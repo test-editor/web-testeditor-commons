@@ -4,17 +4,16 @@ import { DeleteAction } from './confirmation-needing-action';
 
 describe('EmbeddedDeleteButton', () => {
   it('should create an instance', () => {
-    expect(new EmbeddedDeleteButton(new DeleteAction({ name: '', children: [], root: null}, () => {}))).toBeTruthy();
+    expect(new EmbeddedDeleteButton(new DeleteAction(new TreeNode({ name: '', children: []}), () => {}))).toBeTruthy();
   });
 
   it('sets all fields to values appropriate for delete button', () => {
     // given
-    const buttonAction = new DeleteAction({ name: '', children: [], root: null}, () => {});
-    const contextNode: TreeNode = {
+    const buttonAction = new DeleteAction(new TreeNode({ name: '', children: []}), () => {});
+    const contextNode = new TreeNode({
       children: [],
-      root: null,
       name: 'NodeWithDeleteButton'
-    };
+    });
 
     // when
     const actualButton = new EmbeddedDeleteButton(buttonAction);

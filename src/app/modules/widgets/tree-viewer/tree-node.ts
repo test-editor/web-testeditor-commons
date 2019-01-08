@@ -26,7 +26,8 @@ export class TreeNode {
     }
   }
 
-  constructor({ name, children, active, selected, expanded, expandedCssClasses, collapsedCssClasses, leafCssClasses, hover, id }:
+  constructor({ name, children, active, selected, expanded, expandedCssClasses,
+    collapsedCssClasses, leafCssClasses, hover, id, cssClasses }:
     TreeNodeWithoutParentLinks, parent: TreeNode = null) {
     this.name = name;
     this.active = active;
@@ -35,6 +36,7 @@ export class TreeNode {
     this.expandedCssClasses = expandedCssClasses;
     this.collapsedCssClasses = collapsedCssClasses;
     this.leafCssClasses = leafCssClasses;
+    this.cssClasses = cssClasses;
     this.hover = hover;
     this.id = id;
     this.parent = parent;
@@ -50,7 +52,7 @@ export class TreeNode {
     TreeNode.deselectTree(this.root);
   }
 
-  private get root() {
+  get root() {
     let currentNode: TreeNode = this;
     while (currentNode.parent) {
       currentNode = currentNode.parent;

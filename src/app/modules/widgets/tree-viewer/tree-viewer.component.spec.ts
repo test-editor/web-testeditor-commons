@@ -6,13 +6,9 @@ import { InputBoxConfig, TreeViewerInputBoxConfig, TREE_NODE_CREATE_AT_SELECTED,
 import { DeleteAction } from './confirmation-needing-action';
 import { IndicatorBoxComponent } from './indicator-box/indicator-box.component';
 import { InputBoxComponent } from './input-box/input-box.component';
-import { forEach, TreeNode } from './tree-node';
 import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
 import { TreeViewerComponent } from './tree-viewer.component';
-import { TreeNode, CommonTreeNodeActions } from './tree-node';
-import { TreeViewerConfig } from './tree-viewer-config';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { forEach, TreeNode, CommonTreeNodeActions } from './tree-node';
 
 describe('TreeViewerComponent', () => {
   let component: TreeViewerComponent;
@@ -22,29 +18,25 @@ describe('TreeViewerComponent', () => {
     const node = {
       name: 'tree node',
       children: [],
-      root: null,
       leafCssClasses: 'fa-file',
       cssClasses: 'someCssClass otherCssClass'
     };
-    node.root = node;
-    return node;
+    return new TreeNode(node);
   };
 
   const treeNodeWithSubNodes: () => TreeNode = () => {
-    const root: TreeNode = {
+    const root = new TreeNode({
       name: 'parent node',
-      root: null,
       collapsedCssClasses: 'fa-chevron-right',
       expandedCssClasses: 'fa-chevron-down',
       leafCssClasses: 'fa-folder',
       expanded: false,
       children: [
-        { name: 'child node 1', children: [], root: null },
-        { name: 'child node 2', children: [], root: null },
-        { name: 'child node 3', children: [], root: null }
+        { name: 'child node 1', children: []},
+        { name: 'child node 2', children: []},
+        { name: 'child node 3', children: []}
       ]
-    };
-    forEach(root, node => { node.root = root; });
+    });
     return root;
   };
 
@@ -185,7 +177,7 @@ describe('TreeViewerComponent', () => {
     component.model = treeNodeWithSubNodes();
     let hasBeenClicked = false;
     component.config = {
-      onClick: (node) => hasBeenClicked = true
+      onClick: () => hasBeenClicked = true
     };
     fixture.detectChanges();
 
@@ -233,8 +225,8 @@ describe('TreeViewerComponent', () => {
 
     component.model = singleEmptyTreeNode();
     component.config = {
-      onIconClick: (node) => iconClickHandlerTriggered = true,
-      onClick: (node) => generalClickHandlerTriggered = true
+      onIconClick: () => iconClickHandlerTriggered = true,
+      onClick: () => generalClickHandlerTriggered = true
     };
     fixture.detectChanges();
 
@@ -255,7 +247,7 @@ describe('TreeViewerComponent', () => {
 
     component.model = singleEmptyTreeNode();
     component.config = {
-      onClick: (node) => generalClickHandlerTriggered = true
+      onClick: () => generalClickHandlerTriggered = true
     };
     fixture.detectChanges();
 
@@ -539,7 +531,7 @@ describe('TreeViewerComponent', () => {
     // given
     const treeNode = singleEmptyTreeNode();
     component.model = treeNode;
-    const action = new DeleteAction({ name: 'elementName', children: [], root: null}, () => {});
+    const action = new DeleteAction(new TreeNode({ name: 'elementName', children: []}), () => {});
 
     // when
     component.commenceAction(action);
@@ -563,7 +555,7 @@ describe('TreeViewerComponent', () => {
     const treeNode = singleEmptyTreeNode();
     let actionHasBeenCalled = false;
     component.model = treeNode;
-    const action = new DeleteAction({ name: 'elementName', children: [], root: null}, () => actionHasBeenCalled = true);
+    const action = new DeleteAction(new TreeNode({ name: 'elementName', children: []}), () => actionHasBeenCalled = true);
     component.commenceAction(action);
     fixture.detectChanges();
     const cancelButton = fixture.debugElement.query(By.css('.confirm-action-cancel-button'));
@@ -583,7 +575,7 @@ describe('TreeViewerComponent', () => {
     const treeNode = singleEmptyTreeNode();
     let actionHasBeenCalled = false;
     component.model = treeNode;
-    const action = new DeleteAction({ name: 'elementName', children: [], root: null}, () => actionHasBeenCalled = true);
+    const action = new DeleteAction(new TreeNode({ name: 'elementName', children: []}), () => actionHasBeenCalled = true);
     component.commenceAction(action);
     fixture.detectChanges();
     const confirmButton = fixture.debugElement.query(By.css('.confirm-action-confirm-button'));
@@ -686,12 +678,10 @@ describe('TreeViewerComponent', () => {
     const treeNode = treeNodeWithSubNodes();
     component.model = treeNode;
     component.select(treeNode);
-    const unrelatedNode: TreeNode = {
+    const unrelatedNode = new TreeNode({
       name: 'unrelated node',
-      children: [],
-      root: null
-    };
-    unrelatedNode.root = unrelatedNode;
+      children: []
+    });
 
     // when
     component.select(unrelatedNode);
