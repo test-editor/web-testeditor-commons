@@ -7,6 +7,7 @@ export interface TreeNodeWithoutParentLinks {
   expandedCssClasses?: string;
   collapsedCssClasses?: string;
   leafCssClasses?: string;
+  cssClasses?: string;
   hover?: string;
   id?: string;
 }
@@ -124,4 +125,10 @@ export class CommonTreeNodeActions {
     ['ArrowUp', CommonTreeNodeActions.selectPreviousVisible],
     ['ArrowDown', CommonTreeNodeActions.selectNextVisible]
   ]);
+}
+
+export function forEach(node: TreeNode, callbackfn: (value: TreeNode) => void): TreeNode {
+  callbackfn(node);
+  node.children.forEach((child) => forEach(child, callbackfn));
+  return node;
 }

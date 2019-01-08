@@ -1,0 +1,14 @@
+<div class="navInputBox" [style.padding-left]="indent ? '12px' : '0px'">
+  <span *ngIf="isTreeViewerInputBoxConfig(config)" class="icon-type fa" [ngClass]="iconCssClasses"></span>
+  <input #theInput
+    (keyup)="onKeyup($event)"
+    (keyup.enter)="onEnter()"
+    (keyup.escape)="onCancel()"
+    (blur)="onCancel()"
+    [ngClass]="{
+      'input-error': errorMessage
+    }"
+    value="{{value}}"
+  />
+  <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
+</div>

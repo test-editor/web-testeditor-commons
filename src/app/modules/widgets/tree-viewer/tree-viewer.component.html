@@ -10,18 +10,52 @@
       'active': model.active,
       'header': level == 0,
       'selected': model.selected
-      }"
-    >
+      }">
       <div class="tree-view-element">
         <span class="icon-type fa" [ngClass]="icon" (click)="onIconClick(model, $event)">
         </span>
-        <span title="{{model.hover}}">{{model.name}}</span>
+        <span *ngIf="!renameElement; else rename" title="{{model.hover}}" (click)="onTextClick(model, $event)" (dblclick)="onTextDoubleClick(model, $event)">{{model.name}}</span>
+        <ng-template #rename>
+          <app-tree-input-box (cancelled)="onRenameCancelled()" (succeeded)="onRenameSucceeded()" [config]="renameElement" [value]="model.name"></app-tree-input-box>
+        </ng-template>
+
       </div>
+
+      <div class="indicator-boxes">
+        <ng-container *ngIf="config && config.indicatorFields">
+          <div *ngFor="let field of config.indicatorFields">
+            <ng-container *ngIf="field.condition(model) else emptyBox">
+              <app-indicator-box [model]="{'node': model, 'possibleStates': field.states}"></app-indicator-box>
+            </ng-container>
+          </div>
+        </ng-container>
+        <div>
+          <span *ngIf="showEmbeddedButton() else emptyBox"
+            [title]="embeddedButton.hoverText(model)"
+            class="embedded-button fa-fw"
+            [ngClass]="embeddedButtonClasses"
+            (click)="onEmbeddedButtonClick()"></span>
+        </div>
+      </div>
+
+    </div>
+    <div *ngIf="activeAction" class="confirm-action" [ngClass]="actionCssClasses">
+      <span class="confirm-action-message">{{activeAction.message}}</span>
+      <br/>
+      <a href="#" class="confirm-action-cancel-button" [ngClass]="activeAction.cancelCssClasses" (click)="onActionCancelled()">{{activeAction.cancelButtonText}}</a>
+      <a href="#" class="confirm-action-confirm-button" [ngClass]="activeAction.confirmCssClasses" (click)="onActionConfirmed()">{{activeAction.confirmButtonText}}</a>
     </div>
   </div>
-  <div *ngIf="model.expanded">
+  <div *ngIf="createNewElement" [style.padding-left]="level * 12 + 'px'">
+    <app-tree-input-box (cancelled)="onNewElementCancelled()" (succeeded)="onNewElementSucceeded()" [config]="createNewElement"></app-tree-input-box>
+  </div>
+  <div [ngClass]="{'collapsed-subtree': (model && !model.expanded)}">
     <div *ngFor="let child of model.children">
       <app-tree-viewer [model]="child" [level]="level + 1" [config]="config"></app-tree-viewer>
     </div>
   </div>
 </div>
+
+<ng-template #emptyBox>
+    <div class="fa fa-fw"></div>
+</ng-template>
