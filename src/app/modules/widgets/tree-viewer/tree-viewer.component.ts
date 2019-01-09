@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, Renderer2, ElementRef, ViewChild, isDevMode } from '@angular/core';
+import { Component, Input, OnInit, isDevMode, OnChanges, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
+
 import { MessagingService } from '@testeditor/messaging-service';
 
 import { ConfirmationNeedingAction, isConfirmationNeedingAction } from './confirmation-needing-action';
@@ -128,7 +129,7 @@ export class TreeViewerComponent implements OnInit, OnChanges {
   }
 
   onKeyUp(node: TreeNode, event: KeyboardEvent) {
-    console.log('key up!')
+    console.log('key up!');
     if (this.config.onKeyPress) {
       this.config.onKeyPress.get(event.key)(node);
     }
