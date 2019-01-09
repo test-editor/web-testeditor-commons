@@ -6,9 +6,9 @@ import { InputBoxConfig, TreeViewerInputBoxConfig, TREE_NODE_CREATE_AT_SELECTED,
 import { DeleteAction } from './confirmation-needing-action';
 import { IndicatorBoxComponent } from './indicator-box/indicator-box.component';
 import { InputBoxComponent } from './input-box/input-box.component';
+import { CommonTreeNodeActions, TreeNode } from './tree-node';
 import { EmbeddedDeleteButton } from './tree-viewer-embedded-button';
 import { TreeViewerComponent } from './tree-viewer.component';
-import { forEach, TreeNode, CommonTreeNodeActions } from './tree-node';
 
 describe('TreeViewerComponent', () => {
   let component: TreeViewerComponent;
