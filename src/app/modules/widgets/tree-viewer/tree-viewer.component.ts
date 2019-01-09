@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, isDevMode, OnChanges, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, isDevMode, OnChanges, SimpleChanges, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 
 import { MessagingService } from '@testeditor/messaging-service';
 
@@ -36,14 +36,17 @@ export class TreeViewerComponent implements OnInit, OnChanges {
   constructor(private messagingService: MessagingService) { }
 
   ngOnInit() {
-    if (this.model && this.config && this.config.embeddedButton) {
-      this.embeddedButton = this.config.embeddedButton(this.model);
+    if (this.model) {
+      this.model.selectOnly = () => this.select(this.model);
+      if (this.config && this.config.embeddedButton) {
+        this.embeddedButton = this.config.embeddedButton(this.model);
+      }
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.model.selected) {
-      this.treeViewItemKey.nativeElement.focus();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.model) {
+      this.model.selectOnly = () => this.select(this.model);
     }
   }
 
@@ -69,6 +72,7 @@ export class TreeViewerComponent implements OnInit, OnChanges {
     this.log('selecting node', node);
     this.log('model is', this.model);
     if (!node.selected && node.root === this.model.root) {
+      console.log(`Selecting ${node}`);
       node.selected = true;
       const subscription = this.messagingService.subscribe(TREE_NODE_SELECTED, (selectedNode) => {
         this.log('received TREE_NODE_SELECTED', selectedNode);
@@ -126,13 +130,6 @@ export class TreeViewerComponent implements OnInit, OnChanges {
       this.config.onDoubleClick(node);
     }
     this.select(node);
-  }
-
-  onKeyUp(node: TreeNode, event: KeyboardEvent) {
-    console.log('key up!');
-    if (this.config.onKeyPress) {
-      this.config.onKeyPress.get(event.key)(node);
-    }
   }
 
   onTextClick(node: TreeNode, event?: MouseEvent) {

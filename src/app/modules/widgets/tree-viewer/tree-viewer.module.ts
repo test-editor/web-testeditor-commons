@@ -4,6 +4,7 @@ import { TreeViewerComponent } from './tree-viewer.component';
 import { InputBoxComponent } from './input-box/input-box.component';
 import { IndicatorBoxComponent } from './indicator-box/indicator-box.component';
 import { MessagingModule } from '@testeditor/messaging-service';
+import { TreeViewerKeyboardDecoratorComponent } from './tree-viewer-keyboard-decorator.component';
 
 @NgModule({
   imports: [
@@ -12,10 +13,11 @@ import { MessagingModule } from '@testeditor/messaging-service';
   declarations: [
     TreeViewerComponent,
     InputBoxComponent,
-    IndicatorBoxComponent
+    IndicatorBoxComponent,
+    TreeViewerKeyboardDecoratorComponent
   ],
   exports: [
-    TreeViewerComponent
+    TreeViewerComponent, TreeViewerKeyboardDecoratorComponent
   ]
 })
 export class TreeViewerModule { }
