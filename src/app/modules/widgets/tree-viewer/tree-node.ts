@@ -115,7 +115,7 @@ export class CommonTreeNodeActions {
     nextNode.selectOnly();
   }
   public static readonly selectPreviousVisible = (node: TreeNode) => {
-    const previousNode = node.previousVisible()
+    const previousNode = node.previousVisible();
     previousNode.selectOnly();
   }
 

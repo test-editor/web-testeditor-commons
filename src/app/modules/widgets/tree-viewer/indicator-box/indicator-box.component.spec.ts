@@ -13,7 +13,7 @@ describe('IndicatorBoxComponent', () => {
   class TreeNodeWithMarker extends TreeNode {
     marker?: any;
 
-    constructor(baseTreeNode: TreeNodeWithoutParentLinks, marker: any = null, parent: TreeNode = null,) {
+    constructor(baseTreeNode: TreeNodeWithoutParentLinks, marker: any = null, parent: TreeNode = null) {
         super(baseTreeNode, parent);
         this.marker = marker;
       }
