@@ -1,3 +1,5 @@
+import { TreeNodeAction } from './confirmation-needing-action';
+
 export interface TreeNodeWithoutParentLinks {
   name: string;
   children: TreeNodeWithoutParentLinks[];
@@ -110,17 +112,18 @@ export class TreeNode {
   }
 }
 
-export type TreeNodeAction = (node: TreeNode) => void;
-
 export class CommonTreeNodeActions {
+  public static readonly INSTANCE = new CommonTreeNodeActions();
 
-  public static readonly expandAction = (node: TreeNode) => node.expanded = true;
-  public static readonly collapseAction = (node: TreeNode) => node.expanded = false;
-  public static readonly selectNextVisible = (node: TreeNode) => {
+  private constructor() {}
+
+  public readonly expandAction = (node: TreeNode) => node.expanded = true;
+  public readonly collapseAction = (node: TreeNode) => node.expanded = false;
+  public readonly selectNextVisible = (node: TreeNode) => {
     const nextNode = node.nextVisible();
     nextNode.selectOnly();
   }
-  public static readonly selectPreviousVisible = (node: TreeNode) => {
+  public readonly selectPreviousVisible = (node: TreeNode) => {
     const previousNode = node.previousVisible();
     previousNode.selectOnly();
   }
@@ -128,9 +131,9 @@ export class CommonTreeNodeActions {
   // field must come after functions because it references them
   // tslint:disable-next-line:member-ordering
   public static readonly arrowKeyNavigation = new Map<string, TreeNodeAction>([
-    ['ArrowRight', CommonTreeNodeActions.expandAction],
-    ['ArrowLeft', CommonTreeNodeActions.collapseAction],
-    ['ArrowUp', CommonTreeNodeActions.selectPreviousVisible],
-    ['ArrowDown', CommonTreeNodeActions.selectNextVisible]
+    ['ArrowRight', CommonTreeNodeActions.INSTANCE.expandAction],
+    ['ArrowLeft', CommonTreeNodeActions.INSTANCE.collapseAction],
+    ['ArrowUp', CommonTreeNodeActions.INSTANCE.selectPreviousVisible],
+    ['ArrowDown', CommonTreeNodeActions.INSTANCE.selectNextVisible]
   ]);
 }

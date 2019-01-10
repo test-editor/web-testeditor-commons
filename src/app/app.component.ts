@@ -5,7 +5,7 @@ import { InputBoxConfig, TreeViewerInputBoxConfig, TREE_NODE_CREATE_AT_SELECTED,
 import { TREE_NODE_SELECTED } from './modules/event-types-out';
 import { DeleteAction } from './modules/widgets/tree-viewer/confirmation-needing-action';
 import { CommonTreeNodeActions, TreeNode } from './modules/widgets/tree-viewer/tree-node';
-import { TreeViewerConfig } from './modules/widgets/tree-viewer/tree-viewer-config';
+import { TreeViewerKeyboardConfig } from './modules/widgets/tree-viewer/tree-viewer-config';
 import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-embedded-button';
 
 @Component({
@@ -33,7 +33,7 @@ export class AppComponent {
   selectedNode: TreeNode = null;
   indicatorFieldState = [0, 0];
 
-  treeConfig: TreeViewerConfig = {
+  treeConfig: TreeViewerKeyboardConfig = {
     onDoubleClick: (node: TreeNode) => node.cssClasses = 'hidden',
     onIconClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
     onClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
