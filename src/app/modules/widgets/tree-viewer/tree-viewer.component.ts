@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, isDevMode, OnChanges, SimpleChanges, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, isDevMode, OnChanges, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 
 import { MessagingService } from '@testeditor/messaging-service';
 

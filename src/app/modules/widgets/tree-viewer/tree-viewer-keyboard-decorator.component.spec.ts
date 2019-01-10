@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { CommonTreeNodeActions } from './tree-node';
 import { TreeViewerKeyboardDecoratorComponent } from './tree-viewer-keyboard-decorator.component';
 import { treeNodeWithSubNodes } from './tree-viewer.component.spec';
