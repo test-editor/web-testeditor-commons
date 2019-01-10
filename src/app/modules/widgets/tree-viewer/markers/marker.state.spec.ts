@@ -16,7 +16,7 @@ describe('MarkerState', () => {
 
   it('conditions can be invoked', () => {
     // given
-    const node = new TreeNode ({ name: sampleName, children: []});
+    const node = TreeNode.create({ name: sampleName, children: []});
 
     // when
     const actualResult = sampleMarkerState.condition(node);
@@ -32,7 +32,7 @@ describe('MarkerState', () => {
       cssClasses: '',
       label: (node_) => `label for ${node_.name}`,
     };
-    const node = new TreeNode ({ name: sampleName, children: []});
+    const node = TreeNode.create({ name: sampleName, children: []});
 
     // when
     const actualLabel = markerState.label(node);

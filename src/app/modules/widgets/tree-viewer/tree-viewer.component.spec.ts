@@ -17,11 +17,11 @@ export const singleEmptyTreeNode: () => TreeNode = () => {
     leafCssClasses: 'fa-file',
     cssClasses: 'someCssClass otherCssClass'
   };
-  return new TreeNode(node);
+  return TreeNode.create(node);
 };
 
 export const treeNodeWithSubNodes: () => TreeNode = () => {
-  const root = new TreeNode({
+  const root = TreeNode.create({
     name: 'parent node',
     collapsedCssClasses: 'fa-chevron-right',
     expandedCssClasses: 'fa-chevron-down',
@@ -292,7 +292,7 @@ describe('TreeViewerComponent', () => {
     // given
     const treeNode = singleEmptyTreeNode();
     component.model = treeNode;
-    const action = new DeleteAction(new TreeNode({ name: 'elementName', children: []}), () => {});
+    const action = new DeleteAction(TreeNode.create({ name: 'elementName', children: []}), () => {});
 
     // when
     component.commenceAction(action);
@@ -316,7 +316,7 @@ describe('TreeViewerComponent', () => {
     const treeNode = singleEmptyTreeNode();
     let actionHasBeenCalled = false;
     component.model = treeNode;
-    const action = new DeleteAction(new TreeNode({ name: 'elementName', children: []}), () => actionHasBeenCalled = true);
+    const action = new DeleteAction(TreeNode.create({ name: 'elementName', children: []}), () => actionHasBeenCalled = true);
     component.commenceAction(action);
     fixture.detectChanges();
     const cancelButton = fixture.debugElement.query(By.css('.confirm-action-cancel-button'));
@@ -336,7 +336,7 @@ describe('TreeViewerComponent', () => {
     const treeNode = singleEmptyTreeNode();
     let actionHasBeenCalled = false;
     component.model = treeNode;
-    const action = new DeleteAction(new TreeNode({ name: 'elementName', children: []}), () => actionHasBeenCalled = true);
+    const action = new DeleteAction(TreeNode.create({ name: 'elementName', children: []}), () => actionHasBeenCalled = true);
     component.commenceAction(action);
     fixture.detectChanges();
     const confirmButton = fixture.debugElement.query(By.css('.confirm-action-confirm-button'));
@@ -439,7 +439,7 @@ describe('TreeViewerComponent', () => {
     const treeNode = treeNodeWithSubNodes();
     component.model = treeNode;
     component.select(treeNode);
-    const unrelatedNode = new TreeNode({
+    const unrelatedNode = TreeNode.create({
       name: 'unrelated node',
       children: []
     });

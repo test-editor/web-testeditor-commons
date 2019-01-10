@@ -3,13 +3,13 @@ import { TreeNode } from './tree-node';
 
 describe('DeleteAction', () => {
   it('should create an instance', () => {
-    expect(new DeleteAction(new TreeNode({ name: '', children: []}), () => {})).toBeTruthy();
+    expect(new DeleteAction(TreeNode.create({ name: '', children: []}), () => {})).toBeTruthy();
   });
 
   it('sets all fields to values appropriate for delete action', () => {
     // given
     const actionClosure = () => {};
-    const treeNode = new TreeNode({ name: 'elementName', children: []});
+    const treeNode = TreeNode.create({ name: 'elementName', children: []});
 
     // when
     const actualActionObject = new DeleteAction(treeNode, actionClosure);

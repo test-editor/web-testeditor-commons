@@ -1,6 +1,6 @@
 import { TreeNode } from './tree-node';
 
-const root = new TreeNode({
+const root = TreeNode.create({
   name: 'folder',
   children: [{
     name: 'firstChild',

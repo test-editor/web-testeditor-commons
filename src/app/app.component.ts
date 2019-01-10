@@ -16,7 +16,7 @@ import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-
 export class AppComponent {
   title = 'app';
 
-  model = new TreeNode({
+  model: TreeNode = TreeNode.create({
     name: 'parent node',
     collapsedCssClasses: 'fa-chevron-right',
     expandedCssClasses: 'fa-chevron-down',
