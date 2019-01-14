@@ -91,7 +91,7 @@ export class TreeNode {
     return this;
   }
 
-  private nextSiblingOrAncestorSibling(): TreeNode {
+  protected nextSiblingOrAncestorSibling(): TreeNode {
     let sibling: TreeNode = null;
     if (this.parent != null) {
       sibling = this.parent;
@@ -105,7 +105,7 @@ export class TreeNode {
     return sibling;
   }
 
-  private lastVisibleDescendant(): TreeNode {
+  protected lastVisibleDescendant(): TreeNode {
     if (this.children.length > 0 && this.expanded) {
       return this.children[this.children.length - 1].lastVisibleDescendant();
     } else {
