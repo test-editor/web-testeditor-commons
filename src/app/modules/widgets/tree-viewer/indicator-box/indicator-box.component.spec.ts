@@ -15,22 +15,21 @@ describe('IndicatorBoxComponent', () => {
 
     constructor({ name, children, active, selected, expanded, expandedCssClasses,
       collapsedCssClasses, leafCssClasses, hover, id, cssClasses }: TreeNodeWithoutParentLinks,
-      marker: any = null, parent: TreeNode = null) {
-         super();
-          const treeNode = new TreeNode();
-          this.name = name;
-          this.active = active;
-          this.selected = selected;
-          this.expanded = expanded;
-          this.expandedCssClasses = expandedCssClasses;
-          this.collapsedCssClasses = collapsedCssClasses;
-          this.leafCssClasses = leafCssClasses;
-          this.cssClasses = cssClasses;
-          this.hover = hover;
-          this.id = id;
-          this.parent = parent;
-          this.children = children.map((child) =>  TreeNode.create(child, treeNode));
-          this.marker = marker;
+      marker: any = null, parent: TreeNodeWithMarker = null) {
+        super();
+        this.name = name;
+        this.active = active;
+        this.selected = selected;
+        this.expanded = expanded;
+        this.expandedCssClasses = expandedCssClasses;
+        this.collapsedCssClasses = collapsedCssClasses;
+        this.leafCssClasses = leafCssClasses;
+        this.cssClasses = cssClasses;
+        this.hover = hover;
+        this.id = id;
+        this.parent = parent as this;
+        this.children = children.map((child) =>  new TreeNodeWithMarker(child, this) as this);
+        this.marker = marker;
       }
   }
 

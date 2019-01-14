@@ -2,7 +2,7 @@ import { TreeNodeAction } from './confirmation-needing-action';
 
 export interface TreeNodeWithoutParentLinks {
   name: string;
-  children: TreeNodeWithoutParentLinks[];
+  children: this[];
   active?: boolean;
   selected?: boolean;
   expanded?: boolean;
@@ -15,8 +15,7 @@ export interface TreeNodeWithoutParentLinks {
 }
 
 export interface TreeNode extends TreeNodeWithoutParentLinks {
-  parent?: TreeNode;
-  children: TreeNode[];
+  parent?: this;
 }
 
 export function forEach(node: TreeNode, callbackfn: (value: TreeNode) => void): TreeNode {
@@ -70,7 +69,7 @@ export class TreeNode {
     return currentNode;
   }
 
-  public nextVisible(): TreeNode {
+  public nextVisible(): this {
     if (this.children.length > 0 && this.expanded) {
       return this.children[0];
     } else {
@@ -79,7 +78,7 @@ export class TreeNode {
     }
   }
 
-  public previousVisible(): TreeNode {
+  public previousVisible(): this {
     if (this.parent != null) {
       const nodeIndex = this.parent.children.indexOf(this);
       if (nodeIndex === 0) {
@@ -91,8 +90,8 @@ export class TreeNode {
     return this;
   }
 
-  protected nextSiblingOrAncestorSibling(): TreeNode {
-    let sibling: TreeNode = null;
+  protected nextSiblingOrAncestorSibling(): this {
+    let sibling: this = null;
     if (this.parent != null) {
       sibling = this.parent;
       const nodeIndex = this.parent.children.indexOf(this);
@@ -105,7 +104,7 @@ export class TreeNode {
     return sibling;
   }
 
-  protected lastVisibleDescendant(): TreeNode {
+  protected lastVisibleDescendant(): this {
     if (this.children.length > 0 && this.expanded) {
       return this.children[this.children.length - 1].lastVisibleDescendant();
     } else {
