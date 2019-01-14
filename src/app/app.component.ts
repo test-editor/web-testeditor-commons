@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { MessagingService } from '@testeditor/messaging-service';
-import { InputBoxConfig, TreeViewerInputBoxConfig,
-  TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED } from './modules/event-types-in';
+import { InputBoxConfig, TreeViewerInputBoxConfig, TREE_NODE_CREATE_AT_SELECTED,
+  TREE_NODE_RENAME_SELECTED } from './modules/event-types-in';
 import { TREE_NODE_SELECTED } from './modules/event-types-out';
 import { DeleteAction } from './modules/widgets/tree-viewer/confirmation-needing-action';
-import { forEach, TreeNode } from './modules/widgets/tree-viewer/tree-node';
-import { TreeViewerConfig } from './modules/widgets/tree-viewer/tree-viewer-config';
+import { CommonTreeNodeActions, TreeNode } from './modules/widgets/tree-viewer/tree-node';
+import { TreeViewerKeyboardConfig } from './modules/widgets/tree-viewer/tree-viewer-config';
 import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-embedded-button';
 
 @Component({
@@ -16,28 +16,28 @@ import { EmbeddedDeleteButton } from './modules/widgets/tree-viewer/tree-viewer-
 export class AppComponent {
   title = 'app';
 
-  model: TreeNode = {
+  model: TreeNode = TreeNode.create({
     name: 'parent node',
-    root: null,
     collapsedCssClasses: 'fa-chevron-right',
     expandedCssClasses: 'fa-chevron-down',
     leafCssClasses: 'fa-folder',
     cssClasses: '',
     expanded: true,
     children: [
-      { name: 'child node 1', children: [], root: null, leafCssClasses: 'fa-file' },
-      { name: 'child node 2', children: [], root: null, leafCssClasses: 'fa-file' },
-      { name: 'child node 3', children: [], root: null, leafCssClasses: 'fa-file' }
+      { name: 'child node 1', children: [], leafCssClasses: 'fa-file' },
+      { name: 'child node 2', children: [], leafCssClasses: 'fa-file' },
+      { name: 'child node 3', children: [], leafCssClasses: 'fa-file' }
     ]
-  };
+  });
 
   selectedNode: TreeNode = null;
   indicatorFieldState = [0, 0];
 
-  treeConfig: TreeViewerConfig = {
+  treeConfig: TreeViewerKeyboardConfig = {
     onDoubleClick: (node: TreeNode) => node.cssClasses = 'hidden',
     onIconClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
     onClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
+    onKeyPress: CommonTreeNodeActions.arrowKeyNavigation,
     embeddedButton: (node: TreeNode) => new EmbeddedDeleteButton(
       new DeleteAction(node, (_node) => console.log(`Clicked delete button of node '${_node.name}'`))),
     indicatorFields: [
@@ -67,7 +67,6 @@ export class AppComponent {
   };
 
   constructor(private messageBus: MessagingService) {
-    forEach(this.model, node => { node.root = this.model; });
     this.messageBus.subscribe(TREE_NODE_SELECTED, (selectedNode) => this.selectedNode = selectedNode);
   }
 

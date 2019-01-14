@@ -1,14 +1,15 @@
 import { DeleteAction } from './confirmation-needing-action';
+import { TreeNode } from './tree-node';
 
 describe('DeleteAction', () => {
   it('should create an instance', () => {
-    expect(new DeleteAction({ name: '', children: [], root: null}, () => {})).toBeTruthy();
+    expect(new DeleteAction(TreeNode.create({ name: '', children: []}), () => {})).toBeTruthy();
   });
 
   it('sets all fields to values appropriate for delete action', () => {
     // given
     const actionClosure = () => {};
-    const treeNode = { name: 'elementName', children: [], root: null};
+    const treeNode = TreeNode.create({ name: 'elementName', children: []});
 
     // when
     const actualActionObject = new DeleteAction(treeNode, actionClosure);

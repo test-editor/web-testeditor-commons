@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, isDevMode } from '@angular/core';
+import { Component, Input, OnInit, isDevMode, OnChanges, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 
 import { MessagingService } from '@testeditor/messaging-service';
 
@@ -15,7 +15,8 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './tree-viewer.component.html',
   styleUrls: ['./tree-viewer.component.css']
 })
-export class TreeViewerComponent implements OnInit {
+export class TreeViewerComponent implements OnInit, OnChanges {
+  @ViewChild('treeViewItemKey') treeViewItemKey: ElementRef;
 
   @Input() model: TreeNode;
   @Input() level = 0;
@@ -35,8 +36,17 @@ export class TreeViewerComponent implements OnInit {
   constructor(private messagingService: MessagingService) { }
 
   ngOnInit() {
-    if (this.model && this.config && this.config.embeddedButton) {
-      this.embeddedButton = this.config.embeddedButton(this.model);
+    if (this.model) {
+      this.model.selectOnly = () => this.select(this.model);
+      if (this.config && this.config.embeddedButton) {
+        this.embeddedButton = this.config.embeddedButton(this.model);
+      }
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.model) {
+      this.model.selectOnly = () => this.select(this.model);
     }
   }
 
@@ -62,6 +72,7 @@ export class TreeViewerComponent implements OnInit {
     this.log('selecting node', node);
     this.log('model is', this.model);
     if (!node.selected && node.root === this.model.root) {
+      console.log(`Selecting ${node}`);
       node.selected = true;
       const subscription = this.messagingService.subscribe(TREE_NODE_SELECTED, (selectedNode) => {
         this.log('received TREE_NODE_SELECTED', selectedNode);
