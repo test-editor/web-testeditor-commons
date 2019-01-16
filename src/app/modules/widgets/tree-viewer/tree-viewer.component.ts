@@ -3,11 +3,12 @@ import { Component, Input, OnInit, isDevMode, OnChanges, SimpleChanges, ElementR
 import { MessagingService } from '@testeditor/messaging-service';
 
 import { ConfirmationNeedingAction, isConfirmationNeedingAction } from './confirmation-needing-action';
-import { TreeNode } from './tree-node';
+import { TreeNode, NodeView } from './tree-node';
 import { TreeViewerConfig } from './tree-viewer-config';
 import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
 import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
-import { InputBoxConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED, TreeViewerInputBoxConfig } from '../../event-types-in';
+import { InputBoxConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED, TreeViewerInputBoxConfig,
+  TREE_NODE_COMMENCE_ACTION_AT_SELECTED } from '../../event-types-in';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -15,7 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './tree-viewer.component.html',
   styleUrls: ['./tree-viewer.component.css']
 })
-export class TreeViewerComponent implements OnInit, OnChanges {
+export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
   @ViewChild('treeViewItemKey') treeViewItemKey: ElementRef;
 
   @Input() model: TreeNode;
@@ -37,7 +38,7 @@ export class TreeViewerComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     if (this.model) {
-      this.model.selectOnly = () => this.select(this.model);
+      this.model.attachView(this);
       if (this.config && this.config.embeddedButton) {
         this.embeddedButton = this.config.embeddedButton(this.model);
       }
@@ -46,7 +47,7 @@ export class TreeViewerComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.model) {
-      this.model.selectOnly = () => this.select(this.model);
+      this.model.attachView(this);
     }
   }
 
@@ -68,7 +69,7 @@ export class TreeViewerComponent implements OnInit, OnChanges {
 
   /** select this node, publish event that this node has been selected,
       register for selection events (react to selections of other nodes of the same tree and deselect) */
-  public select(node: TreeNode): void {
+  public select(node: TreeNode = this.model): void {
     this.log('selecting node', node);
     this.log('model is', this.model);
     if (!node.selected && node.root === this.model.root) {
@@ -107,7 +108,15 @@ export class TreeViewerComponent implements OnInit, OnChanges {
           if (this.model.root === payload.root) {
             this.renameElement = payload;
           }
-        }));
+        }
+      )
+    );
+    this.selectionContextSubscriptions.add(
+      this.messagingService.subscribe(
+        TREE_NODE_COMMENCE_ACTION_AT_SELECTED,
+        (payload) => this.commenceAction(payload)
+      )
+    );
   }
 
   onClick(node: TreeNode) {

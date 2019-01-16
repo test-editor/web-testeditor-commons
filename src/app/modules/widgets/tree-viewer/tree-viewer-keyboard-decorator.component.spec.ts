@@ -14,11 +14,13 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
   let component: TreeViewerKeyboardDecoratorComponent;
   let fixture: ComponentFixture<TreeViewerKeyboardDecoratorComponent>;
   let keyboardDecorator: DebugElement;
+  let commonActions: CommonTreeNodeActions;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ MessagingModule.forRoot() ],
-      declarations: [ TreeViewerKeyboardDecoratorComponent, TreeViewerComponent, InputBoxComponent, IndicatorBoxComponent ]
+      declarations: [ TreeViewerKeyboardDecoratorComponent, TreeViewerComponent, InputBoxComponent, IndicatorBoxComponent ],
+      providers: [ CommonTreeNodeActions ]
     })
     .compileComponents();
   }));
@@ -30,6 +32,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
     keyboardDecorator = fixture.debugElement.query(By.css('.tree-viewer-keyboard-decorator'));
     keyboardDecorator.nativeElement.focus();
     fixture.detectChanges();
+    commonActions = TestBed.get(CommonTreeNodeActions);
   });
 
   function constructKeyEventWithKey(key: string): any {
@@ -47,7 +50,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       component.model = treeNodeWithSubNodes();
       component.model.expanded = false;
       component.config = {
-        onKeyPress: CommonTreeNodeActions.arrowKeyNavigation
+        onKeyPress: commonActions.arrowKeyNavigation
       };
       fixture.detectChanges();
       fixture.debugElement.query(By.css('.tree-view .tree-view-item-key')).triggerEventHandler('click', new MouseEvent('click'));
@@ -65,7 +68,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       component.model = treeNodeWithSubNodes();
       component.model.expanded = true;
       component.config = {
-        onKeyPress: CommonTreeNodeActions.arrowKeyNavigation
+        onKeyPress: commonActions.arrowKeyNavigation
       };
       fixture.detectChanges();
       fixture.debugElement.query(By.css('.tree-view .tree-view-item-key')).triggerEventHandler('click', new MouseEvent('click'));
@@ -83,7 +86,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       component.model = treeNodeWithSubNodes();
       component.model.expanded = true;
       component.config = {
-        onKeyPress: CommonTreeNodeActions.arrowKeyNavigation
+        onKeyPress: commonActions.arrowKeyNavigation
       };
       fixture.detectChanges();
       fixture.debugElement.query(By.css('.tree-view .tree-view-item-key')).triggerEventHandler('click', new MouseEvent('click'));
@@ -102,7 +105,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       component.model.expanded = false;
       component.model.selected = true;
       component.config = {
-        onKeyPress: CommonTreeNodeActions.arrowKeyNavigation
+        onKeyPress: commonActions.arrowKeyNavigation
       };
       fixture.detectChanges();
 
@@ -119,7 +122,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       component.model = treeNodeWithSubNodes();
       component.model.expanded = true;
       component.config = {
-        onKeyPress: CommonTreeNodeActions.arrowKeyNavigation
+        onKeyPress: commonActions.arrowKeyNavigation
       };
       fixture.detectChanges();
       fixture.debugElement.query(By.css('div:nth-child(2) > div:nth-child(1) > app-tree-viewer > div > div.tree-view-item > div'))
@@ -139,7 +142,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       component.model = treeNodeWithSubNodes();
       component.model.expanded = true;
       component.config = {
-        onKeyPress: CommonTreeNodeActions.arrowKeyNavigation
+        onKeyPress: commonActions.arrowKeyNavigation
       };
       fixture.detectChanges();
       fixture.debugElement.query(By.css('.tree-view .tree-view-item-key')).triggerEventHandler('click', new MouseEvent('click'));

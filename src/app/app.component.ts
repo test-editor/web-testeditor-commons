@@ -37,7 +37,7 @@ export class AppComponent {
     onDoubleClick: (node: TreeNode) => node.cssClasses = 'hidden',
     onIconClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
     onClick: (node: TreeNode) => node.expanded !== undefined ? node.expanded = !node.expanded : {},
-    onKeyPress: CommonTreeNodeActions.arrowKeyNavigation,
+    onKeyPress: this.commonActions.arrowKeyNavigation,
     embeddedButton: (node: TreeNode) => new EmbeddedDeleteButton(
       new DeleteAction(node, (_node) => console.log(`Clicked delete button of node '${_node.name}'`))),
     indicatorFields: [
@@ -66,7 +66,7 @@ export class AppComponent {
     ]
   };
 
-  constructor(private messageBus: MessagingService) {
+  constructor(private messageBus: MessagingService, private commonActions: CommonTreeNodeActions) {
     this.messageBus.subscribe(TREE_NODE_SELECTED, (selectedNode) => this.selectedNode = selectedNode);
   }
 
