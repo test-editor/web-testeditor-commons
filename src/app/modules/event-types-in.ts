@@ -21,4 +21,8 @@ export interface TreeViewerInputBoxConfig extends InputBoxConfig {
 }
 export const TREE_NODE_CREATE_AT_SELECTED = 'treenode.create-at-selected';
 
+// request to commence the provided confirmation needing action in the context of the currently selected tree node.
+// payload: ConfirmationNeedingAction from './src/app/modules/widgets/tree-viewer/confirmation-needing-action'
+export const TREE_NODE_COMMENCE_ACTION_AT_SELECTED = 'treenode.commence-action-at-selected';
+
 export const HTTP_CLIENT_SUPPLIED = 'httpClient.supplied';

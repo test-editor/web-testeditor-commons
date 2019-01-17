@@ -5,6 +5,7 @@ import { InputBoxComponent } from './input-box/input-box.component';
 import { IndicatorBoxComponent } from './indicator-box/indicator-box.component';
 import { MessagingModule } from '@testeditor/messaging-service';
 import { TreeViewerKeyboardDecoratorComponent } from './tree-viewer-keyboard-decorator.component';
+import { CommonTreeNodeActions } from './tree-node';
 
 @NgModule({
   imports: [
@@ -18,6 +19,9 @@ import { TreeViewerKeyboardDecoratorComponent } from './tree-viewer-keyboard-dec
   ],
   exports: [
     TreeViewerComponent, TreeViewerKeyboardDecoratorComponent
+  ],
+  providers: [
+    CommonTreeNodeActions
   ]
 })
 export class TreeViewerModule { }

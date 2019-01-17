@@ -1,4 +1,9 @@
+import { Injectable } from '@angular/core';
 import { TreeNodeAction } from './confirmation-needing-action';
+
+export interface NodeView {
+  select(): void;
+}
 
 export interface TreeNodeWithoutParentLinks {
   name: string;
@@ -25,6 +30,7 @@ export function forEach(node: TreeNode, callbackfn: (value: TreeNode) => void): 
 }
 
 export class TreeNode {
+  private view: NodeView = null;
 
   private static deselectTree(tree: TreeNode) {
     tree.selected = false;
@@ -53,8 +59,16 @@ export class TreeNode {
   }
 
   selectOnly() {
-    this.deselectAll();
-    this.selected = true;
+    if (this.view) {
+      this.view.select();
+    } else {
+      this.deselectAll();
+      this.selected = true;
+    }
+  }
+
+  attachView(view: NodeView) {
+    this.view = view;
   }
 
   deselectAll() {
@@ -113,13 +127,13 @@ export class TreeNode {
   }
 }
 
+@Injectable()
 export class CommonTreeNodeActions {
-  public static readonly INSTANCE = new CommonTreeNodeActions();
 
-  private constructor() {}
+  constructor() {}
 
-  public readonly expandAction = (node: TreeNode) => node.expanded = true;
-  public readonly collapseAction = (node: TreeNode) => node.expanded = false;
+  public readonly expandAction = (node: TreeNode) => node.expanded === undefined ? null : node.expanded = true;
+  public readonly collapseAction = (node: TreeNode) => node.expanded === undefined ? null : node.expanded = false;
   public readonly selectNextVisible = (node: TreeNode) => {
     const nextNode = node.nextVisible();
     nextNode.selectOnly();
@@ -131,10 +145,10 @@ export class CommonTreeNodeActions {
 
   // field must come after functions because it references them
   // tslint:disable-next-line:member-ordering
-  public static readonly arrowKeyNavigation = new Map<string, TreeNodeAction>([
-    ['ArrowRight', CommonTreeNodeActions.INSTANCE.expandAction],
-    ['ArrowLeft', CommonTreeNodeActions.INSTANCE.collapseAction],
-    ['ArrowUp', CommonTreeNodeActions.INSTANCE.selectPreviousVisible],
-    ['ArrowDown', CommonTreeNodeActions.INSTANCE.selectNextVisible]
+  public readonly arrowKeyNavigation = new Map<string, TreeNodeAction>([
+    ['ArrowRight', this.expandAction],
+    ['ArrowLeft', this.collapseAction],
+    ['ArrowUp', this.selectPreviousVisible],
+    ['ArrowDown', this.selectNextVisible]
   ]);
 }
