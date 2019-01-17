@@ -8,7 +8,8 @@ import { TreeViewerConfig } from './tree-viewer-config';
 import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
 import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
 import { InputBoxConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED, TreeViewerInputBoxConfig,
-  TREE_NODE_COMMENCE_ACTION_AT_SELECTED } from '../../event-types-in';
+  TREE_NODE_COMMENCE_ACTION_AT_SELECTED,
+  ActionInTree} from '../../event-types-in';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -114,7 +115,11 @@ export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
     this.selectionContextSubscriptions.add(
       this.messagingService.subscribe(
         TREE_NODE_COMMENCE_ACTION_AT_SELECTED,
-        (payload) => this.commenceAction(payload)
+        (payload: ActionInTree) => {
+          if (this.model.root === payload.treeRoot) {
+            this.commenceAction(payload.action);
+          }
+        }
       )
     );
   }

@@ -1,3 +1,4 @@
+import { ConfirmationNeedingAction } from './widgets/tree-viewer/confirmation-needing-action';
 import { TreeNode } from './widgets/tree-viewer/tree-node';
 
 // all events this library's components subscribe to and expect to be pushed by other components
@@ -22,7 +23,11 @@ export interface TreeViewerInputBoxConfig extends InputBoxConfig {
 export const TREE_NODE_CREATE_AT_SELECTED = 'treenode.create-at-selected';
 
 // request to commence the provided confirmation needing action in the context of the currently selected tree node.
-// payload: ConfirmationNeedingAction from './src/app/modules/widgets/tree-viewer/confirmation-needing-action'
+// payload:
+export interface ActionInTree {
+  action: ConfirmationNeedingAction;
+  treeRoot: TreeNode;
+}
 export const TREE_NODE_COMMENCE_ACTION_AT_SELECTED = 'treenode.commence-action-at-selected';
 
 export const HTTP_CLIENT_SUPPLIED = 'httpClient.supplied';
