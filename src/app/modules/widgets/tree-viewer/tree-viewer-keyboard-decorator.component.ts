@@ -17,7 +17,11 @@ export class TreeViewerKeyboardDecoratorComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription;
 
   constructor(private messageBus: MessagingService) {
-    this.subscriptions = this.messageBus.subscribe(TREE_NODE_SELECTED, (selectedNode) => this.selectedNode = selectedNode);
+    this.subscriptions = this.messageBus.subscribe(TREE_NODE_SELECTED, (selectedNode) => {
+      if (this.model.root === selectedNode.root) {
+        this.selectedNode = selectedNode;
+      }
+    });
   }
 
   ngOnInit() {
