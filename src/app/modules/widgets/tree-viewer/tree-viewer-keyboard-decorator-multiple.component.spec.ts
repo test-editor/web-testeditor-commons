@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { MessagingModule } from '@testeditor/messaging-service';
 import { CommonTreeNodeActions, TreeNode } from './tree-node';
 import { TreeViewerKeyboardConfig } from './tree-viewer-config';
