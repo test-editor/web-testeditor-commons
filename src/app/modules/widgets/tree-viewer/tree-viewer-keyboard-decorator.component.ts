@@ -36,6 +36,7 @@ export class TreeViewerKeyboardDecoratorComponent implements OnInit, OnDestroy {
   onKeyUp(event: KeyboardEvent) {
     if (this.config.onKeyPress && this.config.onKeyPress.has(event.key)) {
       this.config.onKeyPress.get(event.key)(this.selectedNode);
+      event.preventDefault();
     }
   }
 
