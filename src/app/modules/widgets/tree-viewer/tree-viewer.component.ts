@@ -1,16 +1,15 @@
-import { Component, Input, OnInit, isDevMode, OnChanges, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
-
+import { Component, ElementRef, Input, isDevMode, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MessagingService } from '@testeditor/messaging-service';
-
-import { ConfirmationNeedingAction, isConfirmationNeedingAction } from './confirmation-needing-action';
-import { TreeNode, NodeView } from './tree-node';
-import { TreeViewerConfig } from './tree-viewer-config';
-import { TREE_NODE_SELECTED, TREE_NODE_DESELECTED } from '../../event-types-out';
-import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
-import { InputBoxConfig, TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED, TreeViewerInputBoxConfig,
-  TREE_NODE_COMMENCE_ACTION_AT_SELECTED,
-  ActionInTree} from '../../event-types-in';
 import { Subscription } from 'rxjs/Subscription';
+import { ActionInTree, InputBoxConfig, TreeViewerInputBoxConfig, TREE_NODE_COMMENCE_ACTION_AT_SELECTED,
+  TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED } from '../../event-types-in';
+import { TREE_NODE_DESELECTED, TREE_NODE_SELECTED } from '../../event-types-out';
+import { ConfirmationNeedingAction, isConfirmationNeedingAction } from './confirmation-needing-action';
+import { NodeView, TreeNode } from './tree-node';
+import { TreeViewerConfig } from './tree-viewer-config';
+import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
+
+
 
 @Component({
   selector: 'app-tree-viewer',
@@ -19,6 +18,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
   @ViewChild('treeViewItemKey') treeViewItemKey: ElementRef;
+  private _scrollableParent: any = null;
 
   @Input() model: TreeNode;
   @Input() level = 0;
@@ -76,6 +76,9 @@ export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
     if (!node.selected && node.root === this.model.root) {
       console.log(`Selecting ${node}`);
       node.selected = true;
+      if (this.treeViewItemKey) {
+        this.treeViewItemKey.nativeElement.scrollIntoView();
+      }
       const subscription = this.messagingService.subscribe(TREE_NODE_SELECTED, (selectedNode) => {
         this.log('received TREE_NODE_SELECTED', selectedNode);
         if ((selectedNode !== node) && (selectedNode.root === this.model.root)) {
@@ -90,6 +93,32 @@ export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
 
       this.messagingService.publish(TREE_NODE_SELECTED, node);
       this.log('published TREE_NODE_SELECTED', node);
+    }
+  }
+
+  public isFullyVisible(): boolean {
+    const elementPosition = this.treeViewItemKey.nativeElement.getBoundingClientRect();
+    const containerPosition = this.scrollableParent.getBoundingClientRect();
+
+    return  elementPosition.top >= containerPosition.top &&
+            elementPosition.bottom <= containerPosition.bottom;
+  }
+
+  private get scrollableParent(): any {
+    if (this._scrollableParent === null) {
+      this._scrollableParent = this.findScrollableParent(this.treeViewItemKey.nativeElement);
+    }
+    return this._scrollableParent;
+  }
+
+  private findScrollableParent(element: any): any {
+    const parent = element.parentNode;
+    if (!parent) {
+      return element;
+    } else if (parent.scrollHeight > parent.clientHeight) {
+      return parent;
+    } else {
+      return this.findScrollableParent(parent);
     }
   }
 

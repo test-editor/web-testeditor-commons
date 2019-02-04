@@ -409,6 +409,21 @@ describe('TreeViewerComponent', () => {
     expect(component.model.selected).toBeTruthy();
   });
 
+  it('scrolls element into view when it is selected', () => {
+    // given
+    component.model = treeNodeWithSubNodes();
+    fixture.detectChanges();
+    const nativeElement = component.treeViewItemKey.nativeElement;
+    spyOn(nativeElement, 'scrollIntoView');
+
+
+    // when
+    component.select(component.model);
+
+    // then
+    expect(nativeElement.scrollIntoView).toHaveBeenCalled();
+  });
+
   it('deselects selected node upon selection of different node', () => {
     const treeNode = treeNodeWithSubNodes();
     const subNode = treeNode.children[0];
