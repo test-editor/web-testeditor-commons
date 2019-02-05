@@ -1,5 +1,5 @@
-import { Component, ElementRef, ViewChild, DebugElement } from '@angular/core';
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { Component, DebugElement, ElementRef, ViewChild } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MessagingModule } from '@testeditor/messaging-service';
 import { TreeNode, TreeNodeWithoutParentLinks } from './tree-node';
