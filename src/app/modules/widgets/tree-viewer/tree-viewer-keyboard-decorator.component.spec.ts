@@ -56,7 +56,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       fixture.debugElement.query(By.css('.tree-view .tree-view-item-key')).triggerEventHandler('click', new MouseEvent('click'));
 
       // when
-      keyboardDecorator.triggerEventHandler('keyup', constructKeyEventWithKey('ArrowRight'));
+      keyboardDecorator.triggerEventHandler('keydown', constructKeyEventWithKey('ArrowRight'));
       fixture.detectChanges();
 
       // then
@@ -74,7 +74,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       fixture.debugElement.query(By.css('.tree-view .tree-view-item-key')).triggerEventHandler('click', new MouseEvent('click'));
 
       // when
-      keyboardDecorator.triggerEventHandler('keyup', constructKeyEventWithKey('ArrowRight'));
+      keyboardDecorator.triggerEventHandler('keydown', constructKeyEventWithKey('ArrowRight'));
       fixture.detectChanges();
 
       // then
@@ -92,7 +92,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       fixture.debugElement.query(By.css('.tree-view .tree-view-item-key')).triggerEventHandler('click', new MouseEvent('click'));
 
       // when
-      keyboardDecorator.triggerEventHandler('keyup', constructKeyEventWithKey('ArrowLeft'));
+      keyboardDecorator.triggerEventHandler('keydown', constructKeyEventWithKey('ArrowLeft'));
       fixture.detectChanges();
 
       // then
@@ -110,7 +110,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       fixture.detectChanges();
 
       // when
-      keyboardDecorator.triggerEventHandler('keyup', constructKeyEventWithKey('ArrowLeft'));
+      keyboardDecorator.triggerEventHandler('keydown', constructKeyEventWithKey('ArrowLeft'));
       fixture.detectChanges();
 
       // then
@@ -129,7 +129,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
         .triggerEventHandler('click', new MouseEvent('click'));
 
       // when
-      keyboardDecorator.triggerEventHandler('keyup', constructKeyEventWithKey('ArrowDown'));
+      keyboardDecorator.triggerEventHandler('keydown', constructKeyEventWithKey('ArrowDown'));
       fixture.detectChanges();
 
       // then
@@ -148,7 +148,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       fixture.debugElement.query(By.css('.tree-view .tree-view-item-key')).triggerEventHandler('click', new MouseEvent('click'));
 
       // when
-      keyboardDecorator.triggerEventHandler('keyup', constructKeyEventWithKey('ArrowDown'));
+      keyboardDecorator.triggerEventHandler('keydown', constructKeyEventWithKey('ArrowDown'));
       fixture.detectChanges();
 
       // then
@@ -163,7 +163,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
     //   fixture.detectChanges();
 
     //   // when
-    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keyup', constructKeyEventWithKey(KeyActions.NAVIGATE_NEXT));
+    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keydown', constructKeyEventWithKey(KeyActions.NAVIGATE_NEXT));
 
     //   // then
     //   expect(component.getWorkspace().getSelected()).toEqual(nonExecutableFile.path);
@@ -177,7 +177,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
     //   fixture.detectChanges();
 
     //   // when
-    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keyup', constructKeyEventWithKey(KeyActions.NAVIGATE_NEXT));
+    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keydown', constructKeyEventWithKey(KeyActions.NAVIGATE_NEXT));
 
     //   // then
     //   expect(component.getWorkspace().getSelected()).toEqual(lastElement.path);
@@ -190,7 +190,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
     //   fixture.detectChanges();
 
     //   // when
-    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keyup', constructKeyEventWithKey(KeyActions.NAVIGATE_PREVIOUS));
+    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keydown', constructKeyEventWithKey(KeyActions.NAVIGATE_PREVIOUS));
 
     //   // then
     //   expect(component.getWorkspace().getSelected()).toEqual(nonExecutableFile.path);
@@ -204,7 +204,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
     //   fixture.detectChanges();
 
     //   // when
-    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keyup', constructKeyEventWithKey(KeyActions.NAVIGATE_PREVIOUS));
+    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keydown', constructKeyEventWithKey(KeyActions.NAVIGATE_PREVIOUS));
 
     //   // then
     //   expect(component.getWorkspace().getElementInfo(component.getWorkspace().getSelected()).name).toEqual('subfolder');
@@ -218,7 +218,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
     //   fixture.detectChanges();
 
     //   // when
-    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keyup', constructKeyEventWithKey(KeyActions.NAVIGATE_PREVIOUS));
+    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keydown', constructKeyEventWithKey(KeyActions.NAVIGATE_PREVIOUS));
 
     //   // then
     //   expect(component.getWorkspace().getSelected()).toEqual('subfolder/newFolder');
@@ -233,7 +233,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
     //   fixture.detectChanges();
 
     //   // when
-    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keyup', constructKeyEventWithKey(KeyActions.NAVIGATE_PREVIOUS));
+    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keydown', constructKeyEventWithKey(KeyActions.NAVIGATE_PREVIOUS));
 
 
     //   // then
@@ -250,7 +250,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
     //   messagingService.subscribe(events.NAVIGATION_OPEN, callback);
 
     //   // when
-    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keyup', constructKeyEventWithKey(KeyActions.OPEN_FILE));
+    //   sidenav.query(By.css('nav-tree-viewer')).triggerEventHandler('keydown', constructKeyEventWithKey(KeyActions.OPEN_FILE));
 
     //   // then
     //   expect(callback).toHaveBeenCalledTimes(1);

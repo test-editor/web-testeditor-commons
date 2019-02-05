@@ -78,7 +78,7 @@ describe('Two keyboard-enabled tree viewers', () => {
     firstTreeFirstChild.nativeElement.click(); fixture.detectChanges();
     secondTreeFirstChild.nativeElement.click(); fixture.detectChanges();
     firstTreeFirstChild.nativeElement.click(); fixture.detectChanges();
-    firstKeyboardDecorator.triggerEventHandler('keyup', {key: 'ArrowDown'}); fixture.detectChanges();
+    firstKeyboardDecorator.triggerEventHandler('keydown', {key: 'ArrowDown'}); fixture.detectChanges();
 
     // then
     expect(hostComponent.firstTree.children[0].selected).toBeFalsy('element remained selected after down arrow key was pressed');
