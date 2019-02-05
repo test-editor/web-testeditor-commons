@@ -1,5 +1,5 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, ElementRef, ViewChild, DebugElement } from '@angular/core';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MessagingModule } from '@testeditor/messaging-service';
 import { TreeNode, TreeNodeWithoutParentLinks } from './tree-node';
@@ -31,7 +31,7 @@ describe('tree viewer inside scrollable viewport', () => {
     @ViewChild('treeViewer')
     treeViewer: TreeViewerComponent;
 
-    treeElements: TreeNodeWithoutParentLinks[] = Array.from({length: 100}, (_, index) => {
+    treeElements: TreeNodeWithoutParentLinks[] = Array.from({length: 15}, (_, index) => {
       return { name: `child${index}`, id: `root/child${index}`, children: [] };
     });
 
@@ -93,7 +93,7 @@ describe('tree viewer inside scrollable viewport', () => {
     expect(actualResult).toBeFalsy();
   });
 
-  it('detects that child element is becomes fully visible after scrolling down', () => {
+  it('detects that child element becomes fully visible after scrolling down', () => {
     // given
     scrollContainer.scrollTop = 200;
     const childComponent: TreeViewerComponent = fixture.debugElement.query(By.css('div:nth-child(11) > app-tree-viewer')).componentInstance;
@@ -103,6 +103,59 @@ describe('tree viewer inside scrollable viewport', () => {
 
     // then
     expect(actualResult).toBeTruthy();
+  });
+
+  it('scrolls down to selected element below the viewport', (done: any) => {
+    // given
+    const originalScrollPosition = 0;
+    scrollContainer.scrollTop = originalScrollPosition;
+    const childElement: DebugElement = fixture.debugElement.query(By.css('div:nth-child(11) > app-tree-viewer'));
+    const childComponent: TreeViewerComponent = childElement.componentInstance;
+    const childBottom = childElement.nativeElement.getBoundingClientRect().bottom;
+    const containerBottom = scrollContainer.getBoundingClientRect().top + scrollContainer.clientHeight;
+    expect(childBottom).toBeGreaterThan(containerBottom);
+
+    // when
+    childComponent.select(childComponent.model);
+
+    // then
+    setTimeout(() => { // wait for smooth scrolling animation to complete (fakeAsync/jasmine.clock don't work here)
+      expect(childElement.nativeElement.getBoundingClientRect().bottom).toEqual(containerBottom);
+      done();
+    }, 1000);
+  });
+
+  it('scrolls up to selected element above the viewport', (done: any) => {
+    // given
+    const originalScrollPosition = 250;
+    scrollContainer.scrollTop = originalScrollPosition;
+    const childElement: DebugElement = fixture.debugElement.query(By.css('div:nth-child(2) > app-tree-viewer'));
+    const childComponent: TreeViewerComponent = childElement.componentInstance;
+    const childTop = childElement.nativeElement.getBoundingClientRect().top;
+    const containerTop = scrollContainer.getBoundingClientRect().top;
+    expect(childTop).toBeLessThan(containerTop);
+
+    // when
+    childComponent.select(childComponent.model);
+
+    // then
+    setTimeout(() => { // wait for smooth scrolling animation to complete (fakeAsync/jasmine.clock don't work here)
+      expect(childElement.nativeElement.getBoundingClientRect().top).toEqual(containerTop);
+      done();
+    }, 1000);
+  });
+
+  it('does not scroll to selected element inside the viewport', () => {
+    // given
+    const originalScrollPosition = 50;
+    scrollContainer.scrollTop = originalScrollPosition;
+    const childComponent: TreeViewerComponent = fixture.debugElement.query(By.css('div:nth-child(5) > app-tree-viewer')).componentInstance;
+
+    // when
+    childComponent.select(childComponent.model);
+
+    // then
+    expect(scrollContainer.scrollTop).toEqual(originalScrollPosition);
   });
 
 });

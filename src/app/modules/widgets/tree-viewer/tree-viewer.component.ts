@@ -17,6 +17,8 @@ import { TreeViewerEmbeddedButton } from './tree-viewer-embedded-button';
   styleUrls: ['./tree-viewer.component.css']
 })
 export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
+  private static readonly NO_SCROLLABLE_PARENT = {};
+
   @ViewChild('treeViewItemKey') treeViewItemKey: ElementRef;
   private _scrollableParent: any = null;
 
@@ -76,9 +78,7 @@ export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
     if (!node.selected && node.root === this.model.root) {
       console.log(`Selecting ${node}`);
       node.selected = true;
-      if (this.treeViewItemKey) {
-        this.treeViewItemKey.nativeElement.scrollIntoView();
-      }
+      this.scrollIntoView();
       const subscription = this.messagingService.subscribe(TREE_NODE_SELECTED, (selectedNode) => {
         this.log('received TREE_NODE_SELECTED', selectedNode);
         if ((selectedNode !== node) && (selectedNode.root === this.model.root)) {
@@ -96,12 +96,36 @@ export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
     }
   }
 
+  public scrollIntoView() {
+    if (this.treeViewItemKey && this.hasScrollContainer()) {
+      if (this.extendsBelowViewport()) {
+        this.treeViewItemKey.nativeElement.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'});
+      } else if (this.extendsAboveViewport()) {
+        this.treeViewItemKey.nativeElement.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
+      }
+    }
+  }
+
   public isFullyVisible(): boolean {
+    return !this.extendsAboveViewport() && !this.extendsBelowViewport();
+  }
+
+  public hasScrollContainer(): boolean {
+    return this.scrollableParent !== TreeViewerComponent.NO_SCROLLABLE_PARENT;
+  }
+
+  private extendsBelowViewport(): boolean {
     const elementPosition = this.treeViewItemKey.nativeElement.getBoundingClientRect();
     const containerPosition = this.scrollableParent.getBoundingClientRect();
 
-    return  elementPosition.top >= containerPosition.top &&
-            elementPosition.bottom <= containerPosition.bottom;
+    return elementPosition.bottom > containerPosition.bottom;
+  }
+
+  private extendsAboveViewport(): boolean {
+    const elementPosition = this.treeViewItemKey.nativeElement.getBoundingClientRect();
+    const containerPosition = this.scrollableParent.getBoundingClientRect();
+
+    return  elementPosition.top < containerPosition.top;
   }
 
   private get scrollableParent(): any {
@@ -114,7 +138,7 @@ export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
   private findScrollableParent(element: any): any {
     const parent = element.parentNode;
     if (!parent) {
-      return element;
+      return TreeViewerComponent.NO_SCROLLABLE_PARENT;
     } else if (parent.scrollHeight > parent.clientHeight) {
       return parent;
     } else {
