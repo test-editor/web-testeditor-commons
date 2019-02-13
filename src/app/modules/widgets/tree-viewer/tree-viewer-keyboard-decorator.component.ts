@@ -11,17 +11,33 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./tree-viewer-keyboard-decorator.component.css']
 })
 export class TreeViewerKeyboardDecoratorComponent implements OnInit, OnDestroy {
-  @Input() model: TreeNode;
   @Input() config: TreeViewerKeyboardConfig;
-  private selectedNode: TreeNode = null;
+  private _model: TreeNode;
+  private _selectedNode: TreeNode = null;
   private subscriptions: Subscription;
 
   constructor(private messageBus: MessagingService) {
     this.subscriptions = this.messageBus.subscribe(TREE_NODE_SELECTED, (selectedNode) => {
       if (this.model.root === selectedNode.root) {
-        this.selectedNode = selectedNode;
+        this._selectedNode = selectedNode;
       }
     });
+  }
+
+  get model(): TreeNode {
+    return this._model;
+  }
+
+  @Input()
+  set model(newModel: TreeNode) {
+    if (newModel !== this._model) {
+      this._model = newModel;
+      this._selectedNode = newModel;
+    }
+  }
+
+  get selectedNode(): TreeNode {
+    return this._selectedNode;
   }
 
   ngOnInit() {
@@ -35,7 +51,7 @@ export class TreeViewerKeyboardDecoratorComponent implements OnInit, OnDestroy {
 
   onKeyDown(event: KeyboardEvent) {
     if (this.config.onKeyPress && this.config.onKeyPress.has(event.key)) {
-      this.config.onKeyPress.get(event.key)(this.selectedNode);
+      this.config.onKeyPress.get(event.key)(this._selectedNode);
       event.preventDefault();
     }
   }
