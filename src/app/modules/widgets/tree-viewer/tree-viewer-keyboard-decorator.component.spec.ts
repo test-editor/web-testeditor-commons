@@ -1,7 +1,7 @@
 import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { CommonTreeNodeActions } from './tree-node';
 import { TreeViewerKeyboardDecoratorComponent } from './tree-viewer-keyboard-decorator.component';
-import { treeNodeWithSubNodes } from './tree-viewer.component.spec';
+import { treeNodeWithSubNodes, singleEmptyTreeNode } from './tree-viewer.component.spec';
 import { MessagingModule } from '@testeditor/messaging-service';
 import { TreeViewerComponent } from './tree-viewer.component';
 import { InputBoxComponent } from './input-box/input-box.component';
@@ -18,11 +18,11 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MessagingModule.forRoot() ],
-      declarations: [ TreeViewerKeyboardDecoratorComponent, TreeViewerComponent, InputBoxComponent, IndicatorBoxComponent ],
-      providers: [ CommonTreeNodeActions ]
+      imports: [MessagingModule.forRoot()],
+      declarations: [TreeViewerKeyboardDecoratorComponent, TreeViewerComponent, InputBoxComponent, IndicatorBoxComponent],
+      providers: [CommonTreeNodeActions]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -36,7 +36,7 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
   });
 
   function constructKeyEventWithKey(key: string): any {
-    return { key: key, stopPropagation: () => {}, preventDefault: () => {}};
+    return { key: key, stopPropagation: () => { }, preventDefault: () => { } };
   }
 
   it('should create', () => {
@@ -155,6 +155,27 @@ describe('TreeViewerKeyboardDecoratorComponent', () => {
       expect(component.model.selected).toBeFalsy('original node remained selected');
       expect(component.model.children[0].selected).toBeTruthy('next node was not selected');
     }));
+
+    it('sets selection reference to new root when a different tree model is set', fakeAsync(() => {
+      // given
+      component.model = treeNodeWithSubNodes();
+      component.model.expanded = true;
+      component.config = {
+        onKeyPress: commonActions.arrowKeyNavigation
+      };
+      fixture.detectChanges();
+      fixture.debugElement.query(By.css('div:nth-child(2) > div:nth-child(1) > app-tree-viewer > div > div.tree-view-item > div'))
+        .triggerEventHandler('click', new MouseEvent('click'));
+      expect(component.selectedNode).toEqual(component.model.children[0]);
+
+      // when
+      component.model = singleEmptyTreeNode();
+      fixture.detectChanges();
+
+      // then
+      expect(component.selectedNode).toEqual(component.model);
+    }));
+
 
     // it('selects the parent`s next sibling element when the down arrow key is pressed', async(() => {
     //   // given
