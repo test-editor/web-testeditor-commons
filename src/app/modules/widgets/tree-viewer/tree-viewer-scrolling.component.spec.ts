@@ -62,47 +62,52 @@ describe('tree viewer inside scrollable viewport', () => {
 
   it('detects that root element is initially fully visible', () => {
     // given
-    scrollContainer.scrollTop = 0;
+    const scrollableParent = treeViewer.findScrollableParent();
+
     // when
-    const actualResult = treeViewer.isFullyVisible();
+    scrollContainer.scrollTop = 0;
 
     // then
-    expect(actualResult).toBeTruthy();
+    expect(treeViewer.extendsAboveViewport(scrollableParent)).toBeFalsy();
+    expect(treeViewer.extendsBelowViewport(scrollableParent)).toBeFalsy();
   });
 
   it('detects that root element is not fully visible after scrolling down', () => {
     // given
-    scrollContainer.scrollTop = 1;
+    const scrollableParent = treeViewer.findScrollableParent();
 
     // when
-    const actualResult = treeViewer.isFullyVisible();
+    scrollContainer.scrollTop = 1;
 
     // then
-    expect(actualResult).toBeFalsy();
+    expect(treeViewer.extendsAboveViewport(scrollableParent)).toBeTruthy();
+    expect(treeViewer.extendsBelowViewport(scrollableParent)).toBeFalsy();
   });
 
   it('detects that child element is initially not fully visible', () => {
     // given
-    scrollContainer.scrollTop = 0;
+    const scrollableParent = treeViewer.findScrollableParent();
     const childComponent: TreeViewerComponent = fixture.debugElement.query(By.css('div:nth-child(11) > app-tree-viewer')).componentInstance;
 
     // when
-    const actualResult = childComponent.isFullyVisible();
+    scrollContainer.scrollTop = 0;
 
     // then
-    expect(actualResult).toBeFalsy();
+    expect(childComponent.extendsAboveViewport(scrollableParent)).toBeFalsy();
+    expect(childComponent.extendsBelowViewport(scrollableParent)).toBeTruthy();
   });
 
   it('detects that child element becomes fully visible after scrolling down', () => {
     // given
-    scrollContainer.scrollTop = 200;
+    const scrollableParent = treeViewer.findScrollableParent();
     const childComponent: TreeViewerComponent = fixture.debugElement.query(By.css('div:nth-child(11) > app-tree-viewer')).componentInstance;
 
     // when
-    const actualResult = childComponent.isFullyVisible();
+    scrollContainer.scrollTop = 200;
 
     // then
-    expect(actualResult).toBeTruthy();
+    expect(childComponent.extendsAboveViewport(scrollableParent)).toBeFalsy();
+    expect(childComponent.extendsBelowViewport(scrollableParent)).toBeFalsy();
   });
 
   it('scrolls down to selected element below the viewport', (done: any) => {
