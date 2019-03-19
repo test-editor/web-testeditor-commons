@@ -2,9 +2,9 @@ import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
+import { HttpProviderService } from '../http-provider-service/http-provider.service';
 import { Conflict } from './conflict';
 import { PullActionProtocol } from './pull-action-protocol.service';
-import { HttpProviderService } from '../http-provider-service/http-provider.service';
 
 export const HTTP_STATUS_CONFLICT = 409;
 
@@ -133,7 +133,7 @@ describe('PullActionProtocol', () => {
       httpMock.match(pullMatcher)[0].flush({
         failure: false, diffExists: true, headCommit: 'abcdef',
         changedResources: ['non-dirty-file'],
-        backedUpResources: [{resource: 'dirty-file', backedUpResources: 'backup-file'}]
+        backedUpResources: [{resource: 'dirty-file', backupResource: 'backup-file'}]
       });
       tick();
 
@@ -146,7 +146,7 @@ describe('PullActionProtocol', () => {
         httpMock.match(pullMatcher)[0].flush({
           failure: false, diffExists: true, headCommit: 'bcdef',
           changedResources: ['second-non-dirty-file'],
-          backedUpResources: [{resource: 'second-dirty-file', backedUpResources: 'second-backup-file'}]
+          backedUpResources: [{resource: 'second-dirty-file', backupResource: 'second-backup-file'}]
         });
         tick();
       }
@@ -155,8 +155,8 @@ describe('PullActionProtocol', () => {
       expect(pullActionProtocol.result).toBeTruthy();
       expect(Array.from(pullActionProtocol.changedResourcesSet)).toEqual(['non-dirty-file', 'second-non-dirty-file']);
       expect(pullActionProtocol.backedUpResourcesSet.toArray()).toEqual(
-        jasmine.objectContaining([{ resource: 'dirty-file', backedUpResources: 'backup-file' },
-                                  { resource: 'second-dirty-file', backedUpResources: 'second-backup-file' }]));
+        jasmine.objectContaining([{ resource: 'dirty-file', backupResource: 'backup-file' },
+                                  { resource: 'second-dirty-file', backupResource: 'second-backup-file' }]));
       expect(pullActionProtocol.executionPossible()).toBeFalsy();
     })));
 
