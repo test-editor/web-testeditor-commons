@@ -3,7 +3,7 @@ import { TreeNode } from './tree-node';
 import { TreeViewerKeyboardConfig } from './tree-viewer-config';
 import { MessagingService } from '@testeditor/messaging-service';
 import { TREE_NODE_SELECTED } from '../../event-types-out';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tree-viewer-keyboard-decorator',

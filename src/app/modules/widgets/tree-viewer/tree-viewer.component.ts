@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, isDevMode, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MessagingService } from '@testeditor/messaging-service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ActionInTree, InputBoxConfig, TreeViewerInputBoxConfig, TREE_NODE_COMMENCE_ACTION_AT_SELECTED,
   TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED } from '../../event-types-in';
 import { TREE_NODE_DESELECTED, TREE_NODE_SELECTED } from '../../event-types-out';
