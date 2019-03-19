@@ -31,8 +31,8 @@ export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
 
   private embeddedButton: TreeViewerEmbeddedButton;
   private activeAction: ConfirmationNeedingAction = null;
-  private get actionCssClasses(): string { return this.activeAction ? this.activeAction.messageCssClassses : ''; }
-  private get embeddedButtonClasses(): string {
+  public get actionCssClasses(): string { return this.activeAction ? this.activeAction.messageCssClassses : ''; }
+  public get embeddedButtonClasses(): string {
     return this.embeddedButton && this.embeddedButton.cssClasses ? this.embeddedButton.cssClasses : '';
   }
 
