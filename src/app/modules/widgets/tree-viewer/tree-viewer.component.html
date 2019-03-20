@@ -14,7 +14,7 @@
       <div class="tree-view-element">
         <span class="icon-type fa" [ngClass]="icon" (click)="onIconClick(model, $event)">
         </span>
-        <span *ngIf="!renameElement; else rename" title="{{model.hover}}" (click)="onTextClick(model, $event)" (dblclick)="onTextDoubleClick(model, $event)">{{model.name}}</span>
+        <span *ngIf="!renameElement; else rename" title="{{model.hover}}" (click)="onTextClick(model, $event)" (dblclick)="onTextDoubleClick(model)">{{model.name}}</span>
         <ng-template #rename>
           <app-tree-input-box (cancelled)="onRenameCancelled()" (succeeded)="onRenameSucceeded()" [config]="renameElement" [value]="model.name"></app-tree-input-box>
         </ng-template>

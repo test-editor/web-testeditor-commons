@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, isDevMode, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MessagingService } from '@testeditor/messaging-service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ActionInTree, InputBoxConfig, TreeViewerInputBoxConfig, TREE_NODE_COMMENCE_ACTION_AT_SELECTED,
   TREE_NODE_CREATE_AT_SELECTED, TREE_NODE_RENAME_SELECTED } from '../../event-types-in';
 import { TREE_NODE_DESELECTED, TREE_NODE_SELECTED } from '../../event-types-out';
@@ -29,10 +29,10 @@ export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
   createNewElement: TreeViewerInputBoxConfig = null;
   renameElement: InputBoxConfig = null;
 
-  private embeddedButton: TreeViewerEmbeddedButton;
-  private activeAction: ConfirmationNeedingAction = null;
-  private get actionCssClasses(): string { return this.activeAction ? this.activeAction.messageCssClassses : ''; }
-  private get embeddedButtonClasses(): string {
+  public embeddedButton: TreeViewerEmbeddedButton;
+  public activeAction: ConfirmationNeedingAction = null;
+  public get actionCssClasses(): string { return this.activeAction ? this.activeAction.messageCssClassses : ''; }
+  public get embeddedButtonClasses(): string {
     return this.embeddedButton && this.embeddedButton.cssClasses ? this.embeddedButton.cssClasses : '';
   }
 
@@ -179,9 +179,14 @@ export class TreeViewerComponent implements OnInit, OnChanges, NodeView {
   }
 
   onIconClick(node: TreeNode, event?: MouseEvent) {
-    if (this.config && this.config.onIconClick) {
-      event.stopPropagation();
-      this.config.onIconClick(node);
+    if (this.config) {
+      if (this.config.onIconClick) {
+        event.stopPropagation();
+        this.config.onIconClick(node);
+      } else if (this.config.onClick) {
+        event.stopPropagation();
+        this.config.onClick(node);
+      }
     }
     this.select(node);
   }

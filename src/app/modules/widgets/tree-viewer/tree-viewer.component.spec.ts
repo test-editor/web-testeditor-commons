@@ -226,10 +226,10 @@ describe('TreeViewerComponent', () => {
     };
     fixture.detectChanges();
 
-    const icon = fixture.debugElement.query(By.css('.icon-type')).nativeElement;
+    const icon = fixture.debugElement.query(By.css('.icon-type'));
 
     // when
-    icon.click();
+    icon.triggerEventHandler('click', new MouseEvent('click'));
     fixture.detectChanges();
 
     // then
@@ -247,10 +247,10 @@ describe('TreeViewerComponent', () => {
     };
     fixture.detectChanges();
 
-    const icon = fixture.debugElement.query(By.css('.icon-type')).nativeElement;
+    const icon = fixture.debugElement.query(By.css('.icon-type'));
 
     // when
-    icon.click();
+    icon.triggerEventHandler('click', new MouseEvent('click'));
     fixture.detectChanges();
 
     // then
@@ -322,7 +322,7 @@ describe('TreeViewerComponent', () => {
     const cancelButton = fixture.debugElement.query(By.css('.confirm-action-cancel-button'));
 
     // when
-    cancelButton.nativeElement.click();
+    cancelButton.triggerEventHandler('click', null);
     fixture.detectChanges();
 
     // then
@@ -342,7 +342,7 @@ describe('TreeViewerComponent', () => {
     const confirmButton = fixture.debugElement.query(By.css('.confirm-action-confirm-button'));
 
     // when
-    confirmButton.nativeElement.click();
+    confirmButton.triggerEventHandler('click', null);
     fixture.detectChanges();
 
     // then
@@ -386,9 +386,9 @@ describe('TreeViewerComponent', () => {
     const embeddedButton = fixture.debugElement.query(By.css('.tree-view-item-key .embedded-button'));
 
     // when
-    embeddedButton.nativeElement.click();
+    embeddedButton.triggerEventHandler('click', null);
     fixture.detectChanges();
-    fixture.debugElement.query(By.css('.confirm-action-confirm-button')).nativeElement.click();
+    fixture.debugElement.query(By.css('.confirm-action-confirm-button')).triggerEventHandler('click', null);
     fixture.detectChanges();
 
     // then
@@ -400,10 +400,10 @@ describe('TreeViewerComponent', () => {
     component.model = treeNodeWithSubNodes();
     fixture.detectChanges();
 
-    const item = fixture.debugElement.query(By.css('.tree-view-item-key')).nativeElement;
+    const item = fixture.debugElement.query(By.css('.tree-view-item-key'));
 
     // when
-    item.click();
+    item.triggerEventHandler('click', null);
 
     // then
     expect(component.model.selected).toBeTruthy();
